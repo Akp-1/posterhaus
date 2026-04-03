@@ -1,0 +1,6 @@
+node_modules/
+orders.json
+sales_log.txt
+P_wanted/*
+.env
+.DS_Store
