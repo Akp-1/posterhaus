@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — PosterHaus Orders</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8f7f4; --surface: #fff; --border: #e8e5e0;
+    --text: #1a1916; --muted: #8a8680; --accent: #2c2c2c;
+    --gold: #b8945a; --gold-light: #f0e8d8;
+    --success: #3a7d44; --danger: #c44; --warn: #b8720a;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Mono', monospace; background: var(--bg); color: var(--text); font-size: 13px; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); }
+  .header-inner { max-width: 1000px; margin: 0 auto; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; }
+  .logo span { color: var(--gold); }
+  .back-link { font-size: 11px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+  .back-link:hover { color: var(--text); }
+  .container { max-width: 1000px; margin: 0 auto; padding: 28px 24px; }
+  h2 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; margin-bottom: 6px; }
+  .stats { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 14px 20px; flex: 1; min-width: 130px; }
+  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; }
+  .stat-label { font-size: 10px; color: var(--muted); letter-spacing: 0.08em; }
+  .filter-bar { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
+  .filter-btn { border: 1px solid var(--border); background: var(--surface); padding: 6px 14px; border-radius: 3px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 11px; transition: all 0.2s; }
+  .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
+  th { background: #f5f3ef; text-align: left; padding: 10px 14px; font-size: 10px; color: var(--muted); letter-spacing: 0.1em; border-bottom: 1px solid var(--border); }
+  td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #faf9f7; }
+  .status-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 10px; letter-spacing: 0.05em; }
+  .status-pending { background: #fff8e8; color: var(--warn); border: 1px solid #ead88a; }
+  .status-confirmed { background: #e8f5ec; color: var(--success); border: 1px solid #9dd1aa; }
+  .status-rejected { background: #fde8e8; color: var(--danger); border: 1px solid #f0a0a0; }
+  .action-btn { border: none; cursor: pointer; padding: 5px 12px; border-radius: 3px; font-family: 'DM Mono', monospace; font-size: 10px; margin-right: 4px; transition: opacity 0.2s; }
+  .btn-confirm { background: var(--success); color: #fff; }
+  .btn-reject { background: var(--danger); color: #fff; }
+  .action-btn:hover { opacity: 0.8; }
+  .order-id { color: var(--gold); letter-spacing: 0.06em; }
+  .poster-ids { font-size: 11px; color: var(--muted); max-width: 180px; }
+  .empty { text-align: center; padding: 60px 0; color: var(--muted); }
+  .refresh-btn { background: none; border: 1px solid var(--border); padding: 6px 14px; border-radius: 3px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); transition: all 0.2s; }
+  .refresh-btn:hover { border-color: var(--accent); color: var(--text); }
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <div class="logo">Poster<span>Haus</span> <span style="color:var(--muted);font-size:13px;font-family:'DM Mono',monospace;">/ Admin</span></div>
+    <div style="display:flex; gap:16px; align-items:center;">
+      <span id="user-info" style="font-size:11px; color:var(--muted); letter-spacing:0.05em;"></span>
+      <button onclick="logout()" style="background:none;border:none;cursor:pointer;color:var(--danger);font-family:'DM Mono';font-size:11px;text-decoration:underline;">Logout</button>
+      <a href="/" class="back-link">← Storefront</a>
+    </div>
+  </div>
+</header>
+<div class="container">
+  <div id="admin-controls" style="display:none; margin-bottom:28px; padding:20px; background:var(--surface); border:1px solid var(--border); border-radius:4px;">
+    <h3 style="font-family:'Cormorant Garamond'; margin-bottom:12px;">Master Admin Controls</h3>
+    <div style="display:flex; gap:10px;">
+      <button class="btn-secondary" onclick="document.getElementById('poster-upload').click()">+ Upload Standard Poster (₹60)</button>
+      <input type="file" id="poster-upload" style="display:none" accept="image/*" onchange="uploadStandardPoster(this)">
+      <a href="/api/logs" target="_blank" class="btn-secondary" style="text-decoration:none; padding:10px 20px; display:inline-block; line-height: 1.1;">View Sales Audit Logs</a>
+    </div>
+  </div>
+
+  <div class="filter-bar" id="admin-view-tabs" style="margin-bottom:28px;">
+    <button class="filter-btn active" id="tab-orders" onclick="switchTab('orders')">Orders Dashboard</button>
+    <button class="filter-btn" id="tab-inventory" onclick="switchTab('inventory')">Manage Inventory</button>
+  </div>
+
+  <div id="section-orders">
+    <h2>Orders Dashboard</h2>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:20px;">Verify UTR numbers in your UPI app, then confirm or reject each order.</p>
+    <div class="stats" id="stats"></div>
+    <div style="display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
+      <div class="filter-bar" id="filter-bar">
+        <button class="filter-btn active" onclick="setFilter('all')">All</button>
+        <button class="filter-btn" onclick="setFilter('pending')">Pending</button>
+        <button class="filter-btn" onclick="setFilter('confirmed')">Confirmed</button>
+        <button class="filter-btn" onclick="setFilter('rejected')">Rejected</button>
+      </div>
+      <button class="refresh-btn" onclick="loadOrders()">↻ Refresh</button>
+    </div>
+    <div id="orders-container"></div>
+  </div>
+
+  <div id="section-inventory" style="display:none;">
+    <h2>Manage Inventory</h2>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:20px;">Manual removal for in-person sales at the stall.</p>
+    <div class="stats" id="inventory-stats"></div>
+    <div id="inventory-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:16px;"></div>
+  </div>
+</div>
+
+<script>
+let orders = [];
+let allPosters = [];
+let filter = 'all';
+let currentTab = 'orders';
+let currentUser = null;
+
+async function checkAuth() {
+  const res = await fetch('/api/me');
+  if (!res.ok) {
+    window.location.href = '/login.html';
+    return;
+  }
+  currentUser = await res.json();
+  document.getElementById('user-info').innerText = `Logged in as: ${currentUser.username} (${currentUser.role})`;
+  if (currentUser.role === 'admin') {
+    document.getElementById('admin-controls').style.display = 'block';
+  }
+  loadData();
+}
+
+async function loadData() {
+  try {
+    const [ordersRes, postersRes] = await Promise.all([
+      fetch('/api/orders'),
+      fetch('/api/posters')
+    ]);
+    orders = await ordersRes.json();
+    allPosters = await postersRes.json();
+    
+    orders.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    renderStats();
+    renderOrders();
+    renderInventory();
+  } catch(e) { console.error(e); }
+}
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.getElementById('section-orders').style.display = tab === 'orders' ? 'block' : 'none';
+  document.getElementById('section-inventory').style.display = tab === 'inventory' ? 'block' : 'none';
+  document.getElementById('tab-orders').classList.toggle('active', tab === 'orders');
+  document.getElementById('tab-inventory').classList.toggle('active', tab === 'inventory');
+}
+
+function renderInventory() {
+  const grid = document.getElementById('inventory-grid');
+  grid.innerHTML = allPosters.map(p => `
+    <div class="stat" style="text-align:center; padding:15px;">
+      <img src="/posters/${encodeURIComponent(p.file)}" style="width:100%; height:120px; object-fit:cover; border-radius:2px; margin-bottom:8px;">
+      <div style="font-size:11px; font-weight:600;">${p.name}</div>
+      <div style="font-size:10px; color:var(--gold); margin-bottom:10px;">${p.id} ${p.status === 'reserved' ? '[RESERVED]' : ''}</div>
+      <div style="margin-bottom:8px; display:flex; align-items:center; gap:5px; justify-content:center;">
+        <span style="font-size:10px; color:var(--muted);">₹</span>
+        <input type="number" id="price-${p.id}" value="60" style="width:50px; border:1px solid var(--border); border-radius:2px; padding:2px 4px; font-family:'DM Mono'; font-size:11px; text-align:center;">
+      </div>
+      <button class="action-btn btn-confirm" style="width:100%;" onclick="markAsSold('${p.file}', '${p.id}', '${p.name}')">✓ Mark Sold In-Person</button>
+    </div>
+  `).join('');
+}
+
+async function logout() {
+  await fetch('/api/logout', { method: 'POST' });
+  window.location.href = '/login.html';
+}
+
+async function markAsSold(file, id, name) {
+  const customPrice = document.getElementById(`price-${id}`).value;
+  if (!confirm(`Mark ${name} (${id}) as sold at the stall for ₹${customPrice}?`)) return;
+  
+  try {
+    const res = await fetch('/api/admin/mark-sold', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        posterFile: file, 
+        posterId: id, 
+        posterName: name,
+        customPrice: customPrice
+      })
+    });
+    
+    if (res.ok) {
+      alert('Sold! Poster removed from site.');
+      loadData();
+    } else {
+      const data = await res.json();
+      alert('Failed to mark as sold: ' + (data.error || 'Unknown error'));
+    }
+  } catch (err) {
+    alert('Network error. Check if the server is running.');
+  }
+}
+
+async function loadOrders() {
+  loadData();
+}
+
+function renderStats() {
+  const total = orders.length;
+  const pending = orders.filter(o => o.status === 'pending').length;
+  const confirmed = orders.filter(o => o.status === 'confirmed').length;
+  
+  let revenue = 0;
+  orders.filter(o => o.status === 'confirmed').forEach(o => {
+    if (o.items) {
+      o.items.forEach(item => {
+        // Use the actual price stored in the order item, including framing
+        revenue += (item.price || 0);
+        if (item.framed) revenue += 250;
+      });
+    }
+  });
+
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="stat-num">${total}</div><div class="stat-label">TOTAL ORDERS</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--warn)">${pending}</div><div class="stat-label">PENDING</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--success)">${confirmed}</div><div class="stat-label">CONFIRMED</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--gold)">₹${revenue}</div><div class="stat-label">REVENUE</div></div>
+  `;
+}
+
+function renderOrders() {
+  const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter);
+  if (!filtered.length) {
+    document.getElementById('orders-container').innerHTML = '<div class="empty">No orders here yet.</div>';
+    return;
+  }
+  document.getElementById('orders-container').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th>ORDER ID</th>
+          <th>BUYER</th>
+          <th>ITEMS</th>
+          <th>AMOUNT</th>
+          <th>UTR</th>
+          <th>TIME</th>
+          <th>STATUS</th>
+          <th>ACTIONS</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${filtered.map(o => {
+          let amount = 0;
+          const itemsHtml = (o.items || []).map(item => {
+            let itemPrice = (item.price || 0) + (item.framed ? 250 : 0);
+            amount += itemPrice;
+            
+            let label = item.isCustom ? 'Custom' : 'Standard';
+            let frameLabel = item.framed ? ' <span style="color:var(--success)">[Framed]</span>' : '';
+            let viewLink = item.isCustom ? ` <a href="/P_wanted/${item.file}" target="_blank" style="color:var(--gold)">view</a>` : '';
+            
+            return `<div>${item.id}: ${label}${frameLabel} (₹${item.price})${viewLink}</div>`;
+          }).join('');
+
+          return `
+            <tr>
+              <td class="order-id">${o.orderId}</td>
+              <td>
+                <div>${o.buyerName}</div>
+                <div style="color:var(--muted);font-size:11px;">${o.buyerContact || '—'}</div>
+              </td>
+              <td class="poster-ids">${itemsHtml}</td>
+              <td>₹${amount}</td>
+              <td style="font-family:'DM Mono';font-size:12px;letter-spacing:0.05em;">${o.utrNumber}</td>
+              <td style="color:var(--muted);font-size:11px;">${new Date(o.timestamp).toLocaleString('en-IN', {dateStyle:'short',timeStyle:'short'})}</td>
+              <td><span class="status-badge status-${o.status}">${o.status}</span></td>
+              <td>
+                ${o.status === 'pending' ? `
+                  <button class="action-btn btn-confirm" onclick="updateOrder('${o.orderId}','confirmed')">✓ Confirm</button>
+                  <button class="action-btn btn-reject" onclick="updateOrder('${o.orderId}','rejected')">✕ Reject</button>
+                ` : '—'}
+              </td>
+            </tr>
+          `;
+        }).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+async function updateOrder(id, status) {
+  await fetch(`/api/orders/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ status })
+  });
+  await loadOrders();
+}
+
+function setFilter(f) {
+  filter = f;
+  document.querySelectorAll('.filter-btn').forEach((btn, i) => {
+    btn.classList.toggle('active', ['all','pending','confirmed','rejected'][i] === f);
+  });
+  renderOrders();
+}
+
+checkAuth();
+setInterval(() => {
+  if (currentUser && currentTab === 'orders') loadData();
+}, 15000); // auto-refresh every 15s ONLY on orders tab
+</script>
+</body>
+</html>

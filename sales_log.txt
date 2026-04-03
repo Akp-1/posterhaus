@@ -1,0 +1,29 @@
+[2026-04-02T18:38:37.227Z] [USER: cashier1] Changed order ORD-1775154948628 status from pending to rejected
+[2026-04-02T19:14:07.164Z] [USER: admin] Changed order ORD-1775157206834 status from pending to confirmed
+[2026-04-02T19:14:07.165Z] [USER: admin] Item Sold: PST-004 - 004 | Price: ₹60 | Time to sell: 2.0 hours
+[2026-04-02T19:28:50.505Z] [USER: cashier1] Manual In-Person Sale: 003 (PST-003)
+[2026-04-02T19:36:44.585Z] [USER: cashier1] Manual In-Person Sale: 002 (PST-002)
+[2026-04-02T19:38:06.679Z] [USER: cashier2] Manual In-Person Sale: 006 (PST-006)
+[2026-04-02T19:38:10.801Z] [USER: cashier2] Manual In-Person Sale: 007 (PST-007)
+[2026-04-02T19:38:13.305Z] [USER: cashier2] Manual In-Person Sale: 001 (PST-001)
+[2026-04-02T19:38:15.343Z] [USER: cashier2] Manual In-Person Sale: 005 (PST-005)
+[2026-04-02T19:38:18.165Z] [USER: cashier2] Manual In-Person Sale: Download (PST-009)
+[2026-04-02T19:38:25.695Z] [USER: cashier1] Manual In-Person Sale: 008 (PST-008)
+[2026-04-03T04:34:45.041Z] [USER: agent2] Changed order ORD-1775190869022 status from pending to confirmed
+[2026-04-03T04:34:45.069Z] [USER: agent2] Item Sold: PST-001 - 001 | Price: ₹60 | Time to sell: 11.4 hours
+[2026-04-03T05:07:44.806Z] [USER: admin] Changed order ORD-1775192835339 status from pending to rejected
+[2026-04-03T05:09:16.858Z] [USER: admin] Changed order ORD-1775192931039 status from pending to rejected
+[2026-04-03T06:45:04.350Z] [USER: admin] Changed order ORD-1775198695762 status from pending to rejected
+[2026-04-03T06:45:17.776Z] [USER: admin] Manual In-Person Sale: 006 (PST-006)
+[2026-04-03T06:52:38.022Z] [USER: admin] Manual In-Person Sale: 002 (PST-002)
+[2026-04-03T06:55:02.538Z] [USER: admin] Manual In-Person Sale: 003 (PST-003)
+[2026-04-03T06:58:44.408Z] [USER: agent2] Manual In-Person Sale: 004 (PST-004)
+[2026-04-03T07:00:13.297Z] [USER: agent2] Manual In-Person Sale: 003 (PST-003)
+[2026-04-03T07:00:56.104Z] [USER: agent2] Manual In-Person Sale: 004 (PST-004)
+[2026-04-03T07:07:17.007Z] [USER: agent2] Manual In-Person Sale: 005 (PST-005)
+[2026-04-03T07:08:02.057Z] [USER: admin] Manual In-Person Sale: 002 (PST-002)
+[2026-04-03T07:10:00.353Z] [USER: admin] Manual In-Person Sale: 006 (PST-006)
+[2026-04-03T07:11:41.150Z] [USER: admin] Changed order ORD-1775200262378 status from pending to confirmed
+[2026-04-03T07:11:41.151Z] [USER: admin] Item Sold: PST-001 - 001 | Price: ₹60 | Time to sell: 14.0 hours
+[2026-04-03T07:11:50.271Z] [USER: admin] MARK-SOLD: 008 (PST-008) | Price: ₹600 | Total Order: ₹600
+[2026-04-03T07:14:38.164Z] [USER: agent2] MARK-SOLD: Download (PST-009) | Price: ₹40 | Total Order: ₹40

@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PosterHaus — Premium Poster Store</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f8f7f4;
+    --surface: #ffffff;
+    --border: #e8e5e0;
+    --text: #1a1916;
+    --muted: #8a8680;
+    --accent: #2c2c2c;
+    --gold: #b8945a;
+    --gold-light: #f0e8d8;
+    --danger: #c44;
+    --success: #3a7d44;
+    --radius: 4px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.04);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 13px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-inner {
+    max-width: 1200px; margin: 0 auto;
+    padding: 0 24px;
+    height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 600; letter-spacing: 0.05em;
+    color: var(--text); text-decoration: none;
+  }
+  .logo span { color: var(--gold); }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .cart-btn {
+    background: var(--accent); color: #fff;
+    border: none; cursor: pointer;
+    padding: 8px 18px; border-radius: var(--radius);
+    font-family: 'DM Mono', monospace; font-size: 12px; letter-spacing: 0.05em;
+    display: flex; align-items: center; gap: 8px;
+    transition: opacity 0.2s;
+  }
+  .cart-btn:hover { opacity: 0.85; }
+  .cart-count {
+    background: var(--gold); color: #fff;
+    border-radius: 50%; width: 18px; height: 18px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+  }
+
+  /* ── Main layout ── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+  /* ── Filter / Search bar ── */
+  .toolbar {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 28px; flex-wrap: wrap;
+  }
+  .search-input {
+    flex: 1; min-width: 200px;
+    border: 1px solid var(--border); background: var(--surface);
+    padding: 9px 14px; border-radius: var(--radius);
+    font-family: 'DM Mono', monospace; font-size: 12px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .search-input:focus { border-color: var(--gold); }
+  .count-badge {
+    color: var(--muted); font-size: 12px; white-space: nowrap;
+  }
+
+  /* ── Poster Grid ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    position: relative;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+  .card.selected { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold-light), var(--shadow); }
+  .card-img {
+    width: 100%; aspect-ratio: 3/4;
+    object-fit: cover; display: block;
+    background: var(--bg);
+  }
+  .card-img-placeholder {
+    width: 100%; aspect-ratio: 3/4;
+    background: linear-gradient(135deg, #f0ede8 0%, #e8e4de 100%);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 8px; color: var(--muted);
+  }
+  .card-img-placeholder svg { opacity: 0.4; }
+  .card-body { padding: 12px 14px; }
+  .card-id { font-size: 10px; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 3px; }
+  .card-name { font-family: 'Cormorant Garamond', serif; font-size: 15px; font-weight: 500; line-height: 1.3; }
+  .card.reserved { cursor: not-allowed; opacity: 0.7; }
+  .reserved-badge {
+    position: absolute; top: 10px; left: 10px;
+    background: var(--accent); color: #fff;
+    padding: 2px 8px; border-radius: 2px; font-size: 9px;
+    letter-spacing: 0.1em; font-weight: 600;
+  }
+  .card-price { color: var(--muted); font-size: 11px; margin-top: 4px; }
+  .card-select-badge {
+    position: absolute; top: 10px; right: 10px;
+    background: var(--gold); color: #fff;
+    border-radius: 50%; width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; opacity: 0; transition: opacity 0.2s;
+  }
+  .card.selected .card-select-badge { opacity: 1; }
+
+  /* ── Cart Sidebar ── */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.3);
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 200;
+  }
+  .overlay.open { opacity: 1; pointer-events: all; }
+  .sidebar {
+    position: fixed; top: 0; right: -440px; width: 420px; height: 100%;
+    background: var(--surface); border-left: 1px solid var(--border);
+    transition: right 0.3s cubic-bezier(0.4,0,0.2,1);
+    z-index: 201; display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .sidebar.open { right: 0; }
+  .sidebar-header {
+    padding: 20px 24px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .sidebar-title { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 500; }
+  .close-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 20px; padding: 4px;
+    transition: color 0.2s;
+  }
+  .close-btn:hover { color: var(--text); }
+  .sidebar-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
+  .cart-empty { text-align: center; color: var(--muted); padding: 40px 0; }
+  .cart-item {
+    display: flex; gap: 12px; align-items: center;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .cart-item-img {
+    width: 48px; height: 64px; object-fit: cover;
+    border-radius: 2px; background: var(--bg); flex-shrink: 0;
+  }
+  .cart-item-info { flex: 1; }
+  .cart-item-id { font-size: 10px; color: var(--gold); }
+  .cart-item-name { font-family: 'Cormorant Garamond', serif; font-size: 14px; }
+  .cart-item-price { font-size: 11px; color: var(--muted); }
+  .remove-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); font-size: 16px; padding: 4px;
+    transition: color 0.2s;
+  }
+  .remove-btn:hover { color: var(--danger); }
+  .sidebar-footer { 
+    padding: 20px 24px; border-top: 1px solid var(--border);
+    background: var(--surface); flex-shrink: 0;
+    padding-bottom: env(safe-area-inset-bottom, 20px);
+  }
+  .total-row {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px;
+  }
+  .total-label { font-size: 12px; color: var(--muted); }
+  .total-amount { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 600; }
+  .checkout-btn {
+    width: 100%; background: var(--accent); color: #fff;
+    border: none; cursor: pointer; padding: 13px;
+    border-radius: var(--radius); font-family: 'DM Mono', monospace;
+    font-size: 12px; letter-spacing: 0.08em;
+    transition: opacity 0.2s;
+  }
+  .checkout-btn:hover { opacity: 0.85; }
+  .checkout-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── Checkout Modal ── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--surface); border-radius: 8px;
+    width: 90%; max-width: 480px; max-height: 90vh;
+    overflow-y: auto; padding: 32px;
+    transform: scale(0.96); transition: transform 0.3s;
+  }
+  .modal-overlay.open .modal { transform: scale(1); }
+  .modal-title { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; margin-bottom: 8px; }
+  .modal-sub { color: var(--muted); font-size: 12px; margin-bottom: 24px; }
+
+  /* QR Section */
+  .qr-section {
+    background: var(--gold-light); border: 1px solid #ddd0b8;
+    border-radius: var(--radius); padding: 20px;
+    text-align: center; margin-bottom: 24px;
+  }
+  .qr-section img { width: 160px; height: 160px; border-radius: 4px; margin-bottom: 12px; }
+  .qr-placeholder {
+    width: 160px; height: 160px; margin: 0 auto 12px;
+    border: 2px dashed #c4a96a; border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); font-size: 11px; text-align: center; padding: 12px;
+  }
+  .qr-amount { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 600; color: var(--text); }
+  .qr-upi { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* Form */
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.05em; }
+  .form-input {
+    width: 100%; border: 1px solid var(--border); background: var(--bg);
+    padding: 10px 12px; border-radius: var(--radius);
+    font-family: 'DM Mono', monospace; font-size: 12px; outline: none;
+    transition: border-color 0.2s;
+  }
+  .form-input:focus { border-color: var(--gold); }
+  .form-note { font-size: 10px; color: var(--muted); margin-top: 4px; }
+  .modal-actions { display: flex; gap: 10px; margin-top: 24px; }
+  .btn-primary {
+    flex: 1; background: var(--accent); color: #fff;
+    border: none; cursor: pointer; padding: 12px;
+    border-radius: var(--radius); font-family: 'DM Mono', monospace;
+    font-size: 12px; letter-spacing: 0.08em; transition: opacity 0.2s;
+  }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-secondary {
+    background: none; border: 1px solid var(--border); color: var(--text);
+    cursor: pointer; padding: 12px 20px;
+    border-radius: var(--radius); font-family: 'DM Mono', monospace;
+    font-size: 12px; transition: border-color 0.2s;
+  }
+  .btn-secondary:hover { border-color: var(--accent); }
+
+  /* ── Success State ── */
+  .success-card {
+    text-align: center; padding: 16px 0;
+  }
+  .success-icon { font-size: 48px; margin-bottom: 16px; }
+  .success-title { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500; margin-bottom: 8px; }
+  .order-id-box {
+    background: var(--gold-light); border: 1px solid #ddd0b8;
+    border-radius: var(--radius); padding: 14px;
+    font-family: 'DM Mono', monospace; font-size: 14px;
+    letter-spacing: 0.1em; color: var(--gold);
+    margin: 16px 0;
+  }
+  .success-note { font-size: 11px; color: var(--muted); }
+
+  /* ── Loading ── */
+  .loading { text-align: center; padding: 80px 0; color: var(--muted); }
+  .spinner {
+    width: 28px; height: 28px;
+    border: 2px solid var(--border); border-top-color: var(--gold);
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+    margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .card.upload-hero {
+    border: 2px dashed var(--gold);
+    background: var(--gold-light);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 12px; padding: 20px;
+    min-height: 300px;
+  }
+  .card.upload-hero:hover { background: #efe2c8; }
+  .upload-icon { font-size: 40px; }
+  .upload-text { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--gold); }
+  .upload-subtext { font-size: 11px; color: var(--muted); }
+
+  /* ── Preview Modal ── */
+  .preview-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 400; opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .preview-overlay.open { opacity: 1; pointer-events: all; }
+  .preview-container {
+    background: var(--surface); width: 90%; max-width: 800px;
+    display: flex; border-radius: 8px; overflow: hidden;
+    transform: translateY(20px); transition: transform 0.3s;
+  }
+  .preview-overlay.open .preview-container { transform: translateY(0); }
+  .preview-img-side { flex: 1.2; background: #000; display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
+  .preview-img { max-width: 100%; max-height: 70vh; object-fit: contain; }
+  .preview-info-side { flex: 1; padding: 40px; display: flex; flex-direction: column; justify-content: center; }
+  
+  .frame-preview-box {
+    margin: 20px 0; padding: 15px; border: 1px solid var(--border); border-radius: 4px;
+    background: var(--bg);
+  }
+
+  @media (max-width: 768px) {
+    .preview-container { flex-direction: column; height: 90vh; }
+    .preview-img-side { height: 50%; }
+    .preview-info-side { padding: 24px; }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .sidebar { width: 100%; right: -100%; }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .modal { padding: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a href="/" class="logo">Poster<span>Haus</span></a>
+    <div class="header-right">
+      <button class="cart-btn" onclick="openCart()">
+        🛒 Cart <span class="cart-count" id="cart-count">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <div class="toolbar">
+    <input type="text" class="search-input" id="search" placeholder="Search posters by name or ID..." oninput="filterPosters()">
+    <div style="display:flex; gap:10px; align-items:center;">
+      <button class="btn-secondary" style="padding: 8px 14px;" onclick="document.getElementById('upload-input').click()">+ Upload Your Own (₹80)</button>
+      <input type="file" id="upload-input" style="display:none" accept="image/*" onchange="uploadCustomPoster(this)">
+      <span class="count-badge" id="count-badge">— posters</span>
+    </div>
+  </div>
+  <div class="grid" id="poster-grid">
+    <div class="loading">
+      <div class="spinner"></div>
+      Loading posters...
+    </div>
+  </div>
+</div>
+
+<!-- Cart Sidebar -->
+<div class="overlay" id="overlay" onclick="closeCart()"></div>
+<div class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <span class="sidebar-title">Your Cart</span>
+    <button class="close-btn" onclick="closeCart()">✕</button>
+  </div>
+  <div class="sidebar-body" id="cart-body"></div>
+  <div class="sidebar-footer">
+    <div class="total-row">
+      <span class="total-label">TOTAL</span>
+      <span class="total-amount" id="cart-total">₹0</span>
+    </div>
+    <button class="checkout-btn" id="checkout-btn" onclick="openCheckout()" disabled>
+      Proceed to Pay →
+    </button>
+  </div>
+</div>
+
+<!-- Checkout Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal-content">
+    <!-- filled by JS -->
+  </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="preview-overlay" id="preview-overlay" onclick="if(event.target==this) closePreview()">
+  <div id="preview-modal"></div>
+</div>
+
+<script>
+// ── State ────────────────────────────────────────────────────────────────────
+let allPosters = [];
+let cart = new Map(); // Map: id -> { ...posterData, framed: false }
+const STANDARD_PRICE = 60;
+const CUSTOM_PRICE = 80;
+const FRAME_PRICE = 250;
+
+// ── Config: set your UPI ID here ────────────────────────────────────────────
+const UPI_ID = '8709533015-3@ybl';
+const SHOP_NAME = 'PosterHaus';
+
+// ── Fetch posters ─────────────────────────────────────────────────────────
+async function loadPosters() {
+  try {
+    const res = await fetch('/api/posters');
+    allPosters = await res.json();
+    renderGrid(allPosters);
+  } catch {
+    document.getElementById('poster-grid').innerHTML =
+      '<div class="loading">⚠️ Could not load posters. Make sure the server is running.</div>';
+  }
+}
+
+async function uploadCustomPoster(input) {
+  if (!input.files || !input.files[0]) return;
+  const formData = new FormData();
+  formData.append('image', input.files[0]);
+
+  try {
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
+    if (data.success) {
+      cart.set(data.poster.id, data.poster);
+      updateCartUI();
+      openCart();
+    }
+  } catch {
+    alert('Upload failed');
+  }
+}
+
+function renderGrid(posters) {
+  const grid = document.getElementById('poster-grid');
+  document.getElementById('count-badge').textContent = `${posters.length} poster${posters.length !== 1 ? 's' : ''}`;
+
+  const heroHtml = `
+    <div class="card upload-hero" onclick="document.getElementById('upload-input').click()">
+      <div class="upload-icon">📸</div>
+      <div class="upload-text">Upload Your Own Image</div>
+      <div class="upload-subtext">₹80 • JPEG, PNG, WEBP<br>Print your memories!</div>
+    </div>
+  `;
+
+  if (!posters.length) {
+    grid.innerHTML = heroHtml + '<div class="loading">No posters found. Add images to the <strong>posters/</strong> folder.</div>';
+    return;
+  }
+
+  grid.innerHTML = heroHtml + posters.map(p => `
+    <div class="card ${cart.has(p.id) ? 'selected' : ''} ${p.status === 'reserved' ? 'reserved' : ''}" id="card-${p.id}" onclick="openPreview('${p.id}')">
+      <div class="card-select-badge">✓</div>
+      ${p.status === 'reserved' ? '<div class="reserved-badge">RESERVED</div>' : ''}
+      ${p.file
+        ? `<img class="card-img" src="/posters/${encodeURIComponent(p.file)}" alt="${p.name}" loading="lazy">`
+        : `<div class="card-img-placeholder">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+              <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            <span>${p.id}</span>
+          </div>`
+      }
+      <div class="card-body">
+        <div class="card-id">${p.id}</div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-price">₹${p.price}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── Preview Logic ─────────────────────────────────────────────────────────
+function openPreview(id) {
+  const p = allPosters.find(x => x.id === id);
+  if (!p) return;
+  
+  const inCart = cart.has(id);
+  const currentItem = cart.get(id) || { ...p, framed: false };
+  const isReserved = p.status === 'reserved';
+
+  document.getElementById('preview-modal').innerHTML = `
+    <div class="preview-container">
+      <div class="preview-img-side">
+        <img class="preview-img" src="/posters/${encodeURIComponent(p.file)}" alt="${p.name}" style="${isReserved ? 'filter: grayscale(1);' : ''}">
+        <button onclick="closePreview()" style="position:absolute; top:20px; right:20px; background:rgba(255,255,255,0.2); border:none; color:#fff; width:32px; height:32px; border-radius:50%; cursor:pointer;">✕</button>
+        ${isReserved ? '<div class="reserved-badge" style="top:20px; left:20px; font-size:12px; padding:6px 12px;">BOOKED / UNDER REVIEW</div>' : ''}
+      </div>
+      <div class="preview-info-side">
+        <div class="card-id">${p.id}</div>
+        <div class="modal-title" style="margin-bottom:12px;">${p.name}</div>
+        <div class="modal-sub" style="margin-bottom:24px;">
+          ${isReserved 
+            ? '<span style="color:var(--danger)">Currently reserved by another buyer.</span> It will become available if the payment is rejected by the admin.'
+            : 'Standard high-quality matte finish print. Select framing to upgrade your decor.'}
+        </div>
+        
+        <div style="font-size:24px; font-weight:600; margin-bottom:20px;">₹${p.price}</div>
+
+        <div class="frame-preview-box" style="${isReserved ? 'pointer-events:none; opacity:0.5' : ''}">
+          <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+            <input type="checkbox" id="preview-frame-toggle" ${currentItem.framed ? 'checked' : ''} onchange="togglePreviewFrame('${id}')" ${isReserved ? 'disabled' : ''}>
+            <span style="font-size:13px;">Include Wooden Frame (+₹250)</span>
+          </label>
+        </div>
+
+        <button class="btn-primary" 
+          style="width:100%; padding:10px; font-size:12px; height:auto; min-height:0; ${isReserved ? 'background:var(--muted); cursor:not-allowed;' : ''}" 
+          onclick="${isReserved ? '' : `handlePreviewAction('${id}')`}"
+          ${isReserved ? 'disabled' : ''}>
+          ${isReserved ? 'Currently Unavailable' : (inCart ? 'Remove from Cart' : 'Add to Cart →')}
+        </button>
+      </div>
+    </div>
+  `;
+  document.getElementById('preview-overlay').classList.add('open');
+}
+
+function closePreview() {
+  document.getElementById('preview-overlay').classList.remove('open');
+}
+
+function togglePreviewFrame(id) {
+  const p = allPosters.find(x => x.id === id);
+  const isFramed = document.getElementById('preview-frame-toggle').checked;
+  if (cart.has(id)) {
+    const item = cart.get(id);
+    item.framed = isFramed;
+    updateCartUI();
+  }
+}
+
+function handlePreviewAction(id) {
+  const p = allPosters.find(x => x.id === id);
+  const isFramed = document.getElementById('preview-frame-toggle').checked;
+  
+  if (cart.has(id)) {
+    cart.delete(id);
+  } else {
+    cart.set(id, { ...p, framed: isFramed });
+  }
+  
+  updateCartUI();
+  const card = document.getElementById(`card-${id}`);
+  if (card) card.classList.toggle('selected', cart.has(id));
+  closePreview();
+}
+
+function filterPosters() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const filtered = allPosters.filter(p =>
+    p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q)
+  );
+  renderGrid(filtered);
+}
+
+// ── Cart ──────────────────────────────────────────────────────────────────
+function toggleCart(id) {
+  if (cart.has(id)) {
+    cart.delete(id);
+  } else {
+    const p = allPosters.find(x => x.id === id);
+    if (p) cart.set(id, { ...p, framed: false });
+  }
+  updateCartUI();
+  const card = document.getElementById(`card-${id}`);
+  if (card) card.classList.toggle('selected', cart.has(id));
+}
+
+function updateCartUI() {
+  const count = cart.size;
+  let total = 0;
+  cart.forEach(item => {
+    total += item.price;
+    if (item.framed) total += FRAME_PRICE;
+  });
+  
+  document.getElementById('cart-count').textContent = count;
+  document.getElementById('cart-total').textContent = `₹${total}`;
+  document.getElementById('checkout-btn').disabled = count === 0;
+  renderCartBody();
+}
+
+function renderCartBody() {
+  const body = document.getElementById('cart-body');
+  if (!cart.size) {
+    body.innerHTML = '<div class="cart-empty">Your cart is empty.<br>Tap a poster to add it.</div>';
+    return;
+  }
+  
+  const items = Array.from(cart.values());
+  body.innerHTML = items.map(p => `
+    <div class="cart-item" style="flex-direction:column; align-items:flex-start; gap:8px;">
+      <div style="display:flex; width:100%; gap:12px; align-items:center;">
+        ${p.file
+          ? `<img class="cart-item-img" src="${p.isCustom ? '/P_wanted/' : '/posters/'}${encodeURIComponent(p.file)}" alt="${p.name}">`
+          : `<div class="cart-item-img" style="background:#f0ede8;border-radius:2px;"></div>`
+        }
+        <div class="cart-item-info">
+          <div class="cart-item-id">${p.id}</div>
+          <div class="cart-item-name">${p.name}</div>
+          <div class="cart-item-price">₹${p.price}</div>
+        </div>
+        <button class="remove-btn" onclick="removeItem('${p.id}')">✕</button>
+      </div>
+      <div style="width:100%; padding-left:60px;">
+        <label style="display:flex; align-items:center; gap:8px; font-size:11px; color:var(--gold); cursor:pointer;">
+          <input type="checkbox" ${p.framed ? 'checked' : ''} onchange="toggleFrame('${p.id}')">
+          Add Wood Frame (+ ₹250)
+        </label>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleFrame(id) {
+  const item = cart.get(id);
+  if (item) {
+    item.framed = !item.framed;
+    updateCartUI();
+  }
+}
+
+function removeItem(id) {
+  cart.delete(id);
+  updateCartUI();
+  const card = document.getElementById(`card-${id}`);
+  if (card) card.classList.remove('selected');
+}
+
+function openCart() {
+  renderCartBody();
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+}
+function closeCart() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+// ── Checkout ──────────────────────────────────────────────────────────────
+function openCheckout() {
+  closeCart();
+  let total = 0;
+  const ids = [];
+  
+  cart.forEach(item => {
+    total += item.price;
+    if (item.framed) total += FRAME_PRICE;
+    ids.push(item.id + (item.framed ? ' (Framed)' : ''));
+  });
+
+  const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(SHOP_NAME)}&am=${total}&cu=INR&tn=${encodeURIComponent('Poster Order: ' + ids.join(', '))}`;
+
+  document.getElementById('modal-content').innerHTML = `
+    <div class="modal-title">Complete Payment</div>
+    <div class="modal-sub">Scan QR or tap to pay via UPI • ${cart.size} item${cart.size > 1 ? 's' : ''}</div>
+
+    <div class="qr-section">
+      <img src="/qr.png" alt="Shop QR" style="width:200px;height:200px;object-fit:contain;margin-bottom:12px;background:#fff;padding:10px;border-radius:4px;border:1px solid var(--border);">
+      <div class="qr-amount">₹${total}</div>
+      <div class="qr-upi">${UPI_ID}</div>
+      <div style="margin-top:10px;">
+        <a href="${upiLink}" style="font-size:11px;color:var(--gold);text-decoration:none;border:1px solid var(--gold);padding:6px 14px;border-radius:3px;">
+          Open UPI App →
+        </a>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">YOUR NAME *</label>
+      <input class="form-input" id="buyer-name" type="text" placeholder="Full name">
+    </div>
+    <div class="form-group">
+      <label class="form-label">PHONE / EMAIL</label>
+      <input class="form-input" id="buyer-contact" type="text" placeholder="For order confirmation">
+    </div>
+    <div class="form-group">
+      <label class="form-label">UTR / TRANSACTION ID *</label>
+      <input class="form-input" id="utr-number" type="text" placeholder="12-digit UTR from your UPI app">
+      <div class="form-note">Find this in your UPI app payment history after paying.</div>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="submitOrder()">Confirm Order →</button>
+    </div>
+  `;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+async function submitOrder() {
+  const name = document.getElementById('buyer-name').value.trim();
+  const contact = document.getElementById('buyer-contact').value.trim();
+  const utr = document.getElementById('utr-number').value.trim();
+
+  if (!name) { alert('Please enter your name.'); return; }
+  if (!utr) { alert('Please enter the UTR / Transaction ID after paying.'); return; }
+
+  const items = Array.from(cart.values());
+
+  try {
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        items: items, // Send full objects with 'framed' property
+        buyerName: name,
+        buyerContact: contact,
+        utrNumber: utr
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      cart.clear();
+      updateCartUI();
+      // Reset cards in grid
+      document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+      
+      const hasCustom = items.some(i => i.isCustom);
+      const pickupTime = hasCustom ? "Next Working Day @ 1:30 PM" : "Available NOW at the stall";
+
+      document.getElementById('modal-content').innerHTML = `
+        <div class="success-card">
+          <div class="success-icon">🎉</div>
+          <div class="success-title">Order Placed!</div>
+          <p style="color:var(--muted);font-size:12px;margin-bottom:8px;">Order ID: <span class="order-id-box" style="display:inline; padding:2px 8px; margin:0;">${data.orderId}</span></p>
+          
+          <div style="background:#f0e8d8; border:1px solid #c4a96a; padding:15px; border-radius:4px; margin-top:20px; text-align:left;">
+            <p style="font-weight:600; font-size:12px; margin-bottom:10px; color:var(--text);">📍 Pickup Information:</p>
+            <p style="font-size:11px; margin-bottom:8px; line-height:1.4;">
+              <strong>Where:</strong> Doonix Stall (Sit near Parking Lot)<br>
+              <strong>When:</strong> ${pickupTime}
+            </p>
+            <p style="font-size:10px; color:var(--muted); line-height:1.4; border-top:1px solid rgba(0,0,0,0.1); padding-top:8px;">
+              * Standard posters: Instant pickup at the stall.<br>
+              * Custom posters: Collect by tomorrow 1:30 PM.
+            </p>
+          </div>
+
+          <p class="success-note" style="margin-top:20px;">
+            Screenshot this screen and show it at the stall.
+          </p>
+          <button class="btn-primary" style="margin-top:20px; width:100%;" onclick="closeModal()">Got it!</button>
+        </div>
+      `;
+    }
+  } catch {
+    alert('Could not submit order. Please try again.');
+  }
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+loadPosters();
+</script>
+</body>
+</html>
