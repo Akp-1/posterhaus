@@ -14,7 +14,7 @@
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'DM Mono', monospace; background: var(--bg); color: var(--text); font-size: 13px; }
-  header { background: var(--surface); border-bottom: 1px solid var(--border); }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
   .header-inner { max-width: 1000px; margin: 0 auto; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
   .logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; }
   .logo span { color: var(--gold); }
@@ -35,21 +35,27 @@
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: #faf9f7; }
   .status-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 10px; letter-spacing: 0.05em; }
-  .status-pending { background: #fff8e8; color: var(--warn); border: 1px solid #ead88a; }
+  .status-pending   { background: #fff8e8; color: var(--warn);    border: 1px solid #ead88a; }
   .status-confirmed { background: #e8f5ec; color: var(--success); border: 1px solid #9dd1aa; }
-  .status-rejected { background: #fde8e8; color: var(--danger); border: 1px solid #f0a0a0; }
+  .status-rejected  { background: #fde8e8; color: var(--danger);  border: 1px solid #f0a0a0; }
   .action-btn { border: none; cursor: pointer; padding: 5px 12px; border-radius: 3px; font-family: 'DM Mono', monospace; font-size: 10px; margin-right: 4px; transition: opacity 0.2s; }
   .btn-confirm { background: var(--success); color: #fff; }
-  .btn-reject { background: var(--danger); color: #fff; }
+  .btn-reject  { background: var(--danger);  color: #fff; }
   .action-btn:hover { opacity: 0.8; }
-  .order-id { color: var(--gold); letter-spacing: 0.06em; }
+  .order-id   { color: var(--gold); letter-spacing: 0.06em; }
   .poster-ids { font-size: 11px; color: var(--muted); max-width: 180px; }
   .empty { text-align: center; padding: 60px 0; color: var(--muted); }
   .refresh-btn { background: none; border: 1px solid var(--border); padding: 6px 14px; border-radius: 3px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); transition: all 0.2s; }
   .refresh-btn:hover { border-color: var(--accent); color: var(--text); }
+  .btn-secondary { background: none; border: 1px solid var(--border); color: var(--text); cursor: pointer; padding: 10px 20px; border-radius: 3px; font-family: 'DM Mono', monospace; font-size: 11px; transition: all 0.2s; text-decoration: none; display: inline-block; }
+  .btn-secondary:hover { border-color: var(--accent); }
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 4px; font-size: 12px; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .toast.show { opacity: 1; }
 </style>
 </head>
 <body>
+<div class="toast" id="toast"></div>
+
 <header>
   <div class="header-inner">
     <div class="logo">Poster<span>Haus</span> <span style="color:var(--muted);font-size:13px;font-family:'DM Mono',monospace;">/ Admin</span></div>
@@ -60,21 +66,28 @@
     </div>
   </div>
 </header>
+
 <div class="container">
+  <!-- Admin-only controls: only visible to role === 'admin' -->
   <div id="admin-controls" style="display:none; margin-bottom:28px; padding:20px; background:var(--surface); border:1px solid var(--border); border-radius:4px;">
     <h3 style="font-family:'Cormorant Garamond'; margin-bottom:12px;">Master Admin Controls</h3>
-    <div style="display:flex; gap:10px;">
+    <div style="display:flex; gap:10px; flex-wrap:wrap;">
       <button class="btn-secondary" onclick="document.getElementById('poster-upload').click()">+ Upload Standard Poster (₹60)</button>
+      <!-- ── UPDATE THIS ──────────────────────────────────────────────────────
+           Place your QR image as 'public/qr.png' on the Raspberry Pi.
+           If you rename it, update the src in index.html too.
+      ──────────────────────────────────────────────────────────────────────── -->
       <input type="file" id="poster-upload" style="display:none" accept="image/*" onchange="uploadStandardPoster(this)">
-      <a href="/api/logs" target="_blank" class="btn-secondary" style="text-decoration:none; padding:10px 20px; display:inline-block; line-height: 1.1;">View Sales Audit Logs</a>
+      <a href="/api/logs" target="_blank" class="btn-secondary">View Sales Audit Logs</a>
     </div>
   </div>
 
-  <div class="filter-bar" id="admin-view-tabs" style="margin-bottom:28px;">
-    <button class="filter-btn active" id="tab-orders" onclick="switchTab('orders')">Orders Dashboard</button>
-    <button class="filter-btn" id="tab-inventory" onclick="switchTab('inventory')">Manage Inventory</button>
+  <div class="filter-bar" style="margin-bottom:28px;">
+    <button class="filter-btn active" id="tab-orders"    onclick="switchTab('orders')">Orders Dashboard</button>
+    <button class="filter-btn"        id="tab-inventory" onclick="switchTab('inventory')">Manage Inventory</button>
   </div>
 
+  <!-- Orders Section -->
   <div id="section-orders">
     <h2>Orders Dashboard</h2>
     <p style="color:var(--muted);font-size:12px;margin-bottom:20px;">Verify UTR numbers in your UPI app, then confirm or reject each order.</p>
@@ -86,38 +99,55 @@
         <button class="filter-btn" onclick="setFilter('confirmed')">Confirmed</button>
         <button class="filter-btn" onclick="setFilter('rejected')">Rejected</button>
       </div>
-      <button class="refresh-btn" onclick="loadOrders()">↻ Refresh</button>
+      <button class="refresh-btn" onclick="loadData()">↻ Refresh</button>
     </div>
     <div id="orders-container"></div>
   </div>
 
+  <!-- Inventory Section -->
   <div id="section-inventory" style="display:none;">
     <h2>Manage Inventory</h2>
-    <p style="color:var(--muted);font-size:12px;margin-bottom:20px;">Manual removal for in-person sales at the stall.</p>
-    <div class="stats" id="inventory-stats"></div>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:20px;">Manual sale entry for in-person purchases at the stall.</p>
     <div id="inventory-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:16px;"></div>
   </div>
 </div>
 
 <script>
-let orders = [];
-let allPosters = [];
-let filter = 'all';
-let currentTab = 'orders';
-let currentUser = null;
+let orders       = [];
+let allPosters   = [];
+let filter       = 'all';
+let currentTab   = 'orders';
+let currentUser  = null;
+let autoRefreshTimer = null;
 
+// ── FIXED: auth check using /api/me — if not logged in, go to login page ─────
 async function checkAuth() {
-  const res = await fetch('/api/me');
-  if (!res.ok) {
-    window.location.href = '/login.html';
-    return;
+  try {
+    const res = await fetch('/api/me');
+    if (!res.ok) {
+      window.location.replace('/login.html');
+      return;
+    }
+    currentUser = await res.json();
+    document.getElementById('user-info').textContent =
+      `${currentUser.username} · ${currentUser.role}`;
+
+    // Only show upload + logs controls to admin
+    if (currentUser.role === 'admin') {
+      document.getElementById('admin-controls').style.display = 'block';
+    }
+    loadData();
+    startAutoRefresh();
+  } catch (_) {
+    window.location.replace('/login.html');
   }
-  currentUser = await res.json();
-  document.getElementById('user-info').innerText = `Logged in as: ${currentUser.username} (${currentUser.role})`;
-  if (currentUser.role === 'admin') {
-    document.getElementById('admin-controls').style.display = 'block';
-  }
-  loadData();
+}
+
+function startAutoRefresh() {
+  clearInterval(autoRefreshTimer);
+  autoRefreshTimer = setInterval(() => {
+    if (currentTab === 'orders') loadData();
+  }, 15000);
 }
 
 async function loadData() {
@@ -126,92 +156,127 @@ async function loadData() {
       fetch('/api/orders'),
       fetch('/api/posters')
     ]);
-    orders = await ordersRes.json();
+
+    // ── FIXED: handle 401 mid-session (session expired) ──────────────────────
+    if (ordersRes.status === 401 || ordersRes.status === 403) {
+      window.location.replace('/login.html');
+      return;
+    }
+
+    orders     = await ordersRes.json();
     allPosters = await postersRes.json();
-    
     orders.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-    
+
     renderStats();
     renderOrders();
     renderInventory();
-  } catch(e) { console.error(e); }
+  } catch (e) {
+    console.error('loadData failed:', e);
+  }
 }
 
 function switchTab(tab) {
   currentTab = tab;
-  document.getElementById('section-orders').style.display = tab === 'orders' ? 'block' : 'none';
+  document.getElementById('section-orders').style.display    = tab === 'orders'    ? 'block' : 'none';
   document.getElementById('section-inventory').style.display = tab === 'inventory' ? 'block' : 'none';
-  document.getElementById('tab-orders').classList.toggle('active', tab === 'orders');
+  document.getElementById('tab-orders').classList.toggle('active',    tab === 'orders');
   document.getElementById('tab-inventory').classList.toggle('active', tab === 'inventory');
+}
+
+// ── Upload standard poster (admin only) ──────────────────────────────────────
+async function uploadStandardPoster(input) {
+  if (!input.files || !input.files[0]) return;
+  const formData = new FormData();
+  formData.append('poster', input.files[0]);
+
+  try {
+    const res = await fetch('/api/admin/upload-poster', {
+      method: 'POST',
+      body: formData
+    });
+    if (res.ok) {
+      showToast('✓ Poster uploaded successfully');
+      await loadData();
+    } else {
+      const data = await res.json().catch(() => ({}));
+      showToast('Upload failed: ' + (data.error || 'Unknown error'));
+    }
+  } catch (err) {
+    showToast('Network error during upload');
+  }
+  input.value = ''; // reset input so same file can be re-uploaded
 }
 
 function renderInventory() {
   const grid = document.getElementById('inventory-grid');
+  if (!allPosters.length) {
+    grid.innerHTML = '<div class="empty">No available posters. Add images to the <strong>posters/</strong> folder on the Pi.</div>';
+    return;
+  }
   grid.innerHTML = allPosters.map(p => `
     <div class="stat" style="text-align:center; padding:15px;">
-      <img src="/posters/${encodeURIComponent(p.file)}" style="width:100%; height:120px; object-fit:cover; border-radius:2px; margin-bottom:8px;">
-      <div style="font-size:11px; font-weight:600;">${p.name}</div>
-      <div style="font-size:10px; color:var(--gold); margin-bottom:10px;">${p.id} ${p.status === 'reserved' ? '[RESERVED]' : ''}</div>
+      <img src="/posters/${encodeURIComponent(p.file)}"
+           style="width:100%; height:120px; object-fit:cover; border-radius:2px; margin-bottom:8px;"
+           onerror="this.style.display='none'">
+      <div style="font-size:11px; font-weight:600; margin-bottom:2px;">${p.name}</div>
+      <div style="font-size:10px; color:var(--gold); margin-bottom:8px;">
+        ${p.id} ${p.status === 'reserved' ? '<span style="color:var(--warn)">[RESERVED]</span>' : ''}
+      </div>
       <div style="margin-bottom:8px; display:flex; align-items:center; gap:5px; justify-content:center;">
         <span style="font-size:10px; color:var(--muted);">₹</span>
-        <input type="number" id="price-${p.id}" value="60" style="width:50px; border:1px solid var(--border); border-radius:2px; padding:2px 4px; font-family:'DM Mono'; font-size:11px; text-align:center;">
+        <input type="number" id="price-${p.id}" value="60" min="1"
+          style="width:55px; border:1px solid var(--border); border-radius:2px; padding:2px 4px;
+                 font-family:'DM Mono'; font-size:11px; text-align:center;">
       </div>
-      <button class="action-btn btn-confirm" style="width:100%;" onclick="markAsSold('${p.file}', '${p.id}', '${p.name}')">✓ Mark Sold In-Person</button>
+      <button class="action-btn btn-confirm" style="width:100%;"
+        onclick="markAsSold('${p.file}', '${p.id}', '${encodeURIComponent(p.name)}')">
+        ✓ Sold In-Person
+      </button>
     </div>
   `).join('');
 }
 
 async function logout() {
+  clearInterval(autoRefreshTimer);
   await fetch('/api/logout', { method: 'POST' });
-  window.location.href = '/login.html';
+  window.location.replace('/login.html');
 }
 
-async function markAsSold(file, id, name) {
-  const customPrice = document.getElementById(`price-${id}`).value;
-  if (!confirm(`Mark ${name} (${id}) as sold at the stall for ₹${customPrice}?`)) return;
-  
+async function markAsSold(file, id, encodedName) {
+  const name = decodeURIComponent(encodedName);
+  const priceInput = document.getElementById(`price-${id}`);
+  const customPrice = priceInput ? priceInput.value : '60';
+
+  if (!confirm(`Mark "${name}" (${id}) as sold at the stall for ₹${customPrice}?`)) return;
+
   try {
     const res = await fetch('/api/admin/mark-sold', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ 
-        posterFile: file, 
-        posterId: id, 
-        posterName: name,
-        customPrice: customPrice
-      })
+      body: JSON.stringify({ posterFile: file, posterId: id, posterName: name, customPrice })
     });
-    
     if (res.ok) {
-      alert('Sold! Poster removed from site.');
-      loadData();
+      showToast(`✓ "${name}" marked as sold`);
+      await loadData();
     } else {
-      const data = await res.json();
-      alert('Failed to mark as sold: ' + (data.error || 'Unknown error'));
+      const data = await res.json().catch(() => ({}));
+      showToast('Failed: ' + (data.error || 'Unknown error'));
     }
-  } catch (err) {
-    alert('Network error. Check if the server is running.');
+  } catch (_) {
+    showToast('Network error. Is the server running?');
   }
 }
 
-async function loadOrders() {
-  loadData();
-}
-
 function renderStats() {
-  const total = orders.length;
-  const pending = orders.filter(o => o.status === 'pending').length;
+  const total     = orders.length;
+  const pending   = orders.filter(o => o.status === 'pending').length;
   const confirmed = orders.filter(o => o.status === 'confirmed').length;
-  
   let revenue = 0;
   orders.filter(o => o.status === 'confirmed').forEach(o => {
-    if (o.items) {
-      o.items.forEach(item => {
-        // Use the actual price stored in the order item, including framing
-        revenue += (item.price || 0);
-        if (item.framed) revenue += 250;
-      });
-    }
+    (o.items || []).forEach(item => {
+      revenue += (item.price || 0);
+      if (item.framed) revenue += 250;
+    });
   });
 
   document.getElementById('stats').innerHTML = `
@@ -224,36 +289,34 @@ function renderStats() {
 
 function renderOrders() {
   const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter);
+  const container = document.getElementById('orders-container');
+
   if (!filtered.length) {
-    document.getElementById('orders-container').innerHTML = '<div class="empty">No orders here yet.</div>';
+    container.innerHTML = '<div class="empty">No orders here yet.</div>';
     return;
   }
-  document.getElementById('orders-container').innerHTML = `
+
+  container.innerHTML = `
     <table>
       <thead>
         <tr>
-          <th>ORDER ID</th>
-          <th>BUYER</th>
-          <th>ITEMS</th>
-          <th>AMOUNT</th>
-          <th>UTR</th>
-          <th>TIME</th>
-          <th>STATUS</th>
-          <th>ACTIONS</th>
+          <th>ORDER ID</th><th>BUYER</th><th>ITEMS</th>
+          <th>AMOUNT</th><th>UTR</th><th>TIME</th>
+          <th>STATUS</th><th>ACTIONS</th>
         </tr>
       </thead>
       <tbody>
         ${filtered.map(o => {
           let amount = 0;
           const itemsHtml = (o.items || []).map(item => {
-            let itemPrice = (item.price || 0) + (item.framed ? 250 : 0);
+            const itemPrice = (item.price || 0) + (item.framed ? 250 : 0);
             amount += itemPrice;
-            
-            let label = item.isCustom ? 'Custom' : 'Standard';
-            let frameLabel = item.framed ? ' <span style="color:var(--success)">[Framed]</span>' : '';
-            let viewLink = item.isCustom ? ` <a href="/P_wanted/${item.file}" target="_blank" style="color:var(--gold)">view</a>` : '';
-            
-            return `<div>${item.id}: ${label}${frameLabel} (₹${item.price})${viewLink}</div>`;
+            const label     = item.isCustom ? 'Custom' : 'Standard';
+            const frameTag  = item.framed ? ' <span style="color:var(--success)">[Framed]</span>' : '';
+            const viewLink  = item.isCustom
+              ? ` <a href="/P_wanted/${encodeURIComponent(item.file)}" target="_blank" style="color:var(--gold)">view</a>`
+              : '';
+            return `<div>${item.id}: ${label}${frameTag} (₹${item.price})${viewLink}</div>`;
           }).join('');
 
           return `
@@ -265,17 +328,18 @@ function renderOrders() {
               </td>
               <td class="poster-ids">${itemsHtml}</td>
               <td>₹${amount}</td>
-              <td style="font-family:'DM Mono';font-size:12px;letter-spacing:0.05em;">${o.utrNumber}</td>
-              <td style="color:var(--muted);font-size:11px;">${new Date(o.timestamp).toLocaleString('en-IN', {dateStyle:'short',timeStyle:'short'})}</td>
+              <td style="font-size:12px;letter-spacing:0.04em;">${o.utrNumber}</td>
+              <td style="color:var(--muted);font-size:11px;">
+                ${new Date(o.timestamp).toLocaleString('en-IN', { dateStyle:'short', timeStyle:'short' })}
+              </td>
               <td><span class="status-badge status-${o.status}">${o.status}</span></td>
               <td>
                 ${o.status === 'pending' ? `
                   <button class="action-btn btn-confirm" onclick="updateOrder('${o.orderId}','confirmed')">✓ Confirm</button>
-                  <button class="action-btn btn-reject" onclick="updateOrder('${o.orderId}','rejected')">✕ Reject</button>
+                  <button class="action-btn btn-reject"  onclick="updateOrder('${o.orderId}','rejected')">✕ Reject</button>
                 ` : '—'}
               </td>
-            </tr>
-          `;
+            </tr>`;
         }).join('')}
       </tbody>
     </table>
@@ -283,26 +347,37 @@ function renderOrders() {
 }
 
 async function updateOrder(id, status) {
-  await fetch(`/api/orders/${id}`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ status })
-  });
-  await loadOrders();
+  try {
+    const res = await fetch(`/api/orders/${id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status })
+    });
+    if (res.ok) {
+      showToast(status === 'confirmed' ? '✓ Order confirmed' : '✕ Order rejected');
+      await loadData();
+    }
+  } catch (_) {
+    showToast('Failed to update order. Check connection.');
+  }
 }
 
 function setFilter(f) {
   filter = f;
-  document.querySelectorAll('.filter-btn').forEach((btn, i) => {
+  document.querySelectorAll('#filter-bar .filter-btn').forEach((btn, i) => {
     btn.classList.toggle('active', ['all','pending','confirmed','rejected'][i] === f);
   });
   renderOrders();
 }
 
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
 checkAuth();
-setInterval(() => {
-  if (currentUser && currentTab === 'orders') loadData();
-}, 15000); // auto-refresh every 15s ONLY on orders tab
 </script>
 </body>
 </html>
