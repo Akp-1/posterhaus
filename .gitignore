@@ -1,6 +1,8 @@
 node_modules/
 orders.json
 sales_log.txt
+*.bak
+posterhaus.db
 P_wanted/*
 .env
 .DS_Store

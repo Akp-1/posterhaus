@@ -228,12 +228,20 @@ function renderInventory() {
           style="width:55px; border:1px solid var(--border); border-radius:2px; padding:2px 4px;
                  font-family:'DM Mono'; font-size:11px; text-align:center;">
       </div>
-      <button class="action-btn btn-confirm" style="width:100%;"
-        onclick="markAsSold('${p.file}', '${p.id}', '${encodeURIComponent(p.name)}')">
+      <button class="action-btn btn-confirm js-mark-sold" style="width:100%;"
+        data-file="${escapeHtml(p.file)}"
+        data-id="${escapeHtml(p.id)}"
+        data-name="${escapeHtml(p.name)}">
         ✓ Sold In-Person
       </button>
     </div>
   `).join('');
+
+  grid.querySelectorAll('.js-mark-sold').forEach(button => {
+    button.addEventListener('click', () => {
+      markAsSold(button.dataset.file, button.dataset.id, button.dataset.name);
+    });
+  });
 }
 
 async function logout() {
@@ -242,8 +250,7 @@ async function logout() {
   window.location.replace('/login.html');
 }
 
-async function markAsSold(file, id, encodedName) {
-  const name = decodeURIComponent(encodedName);
+async function markAsSold(file, id, name) {
   const priceInput = document.getElementById(`price-${id}`);
   const customPrice = priceInput ? priceInput.value : '60';
 
@@ -375,6 +382,16 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  }[ch]));
 }
 
 checkAuth();
