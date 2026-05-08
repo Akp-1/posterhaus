@@ -29,7 +29,7 @@ Follow these steps to get the project running on your local machine.
 
 ### 2. Clone the Repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/posterhaus.git
+git clone https://github.com/Akp-1/posterhaus.git
 cd posterhaus
 ```
 
