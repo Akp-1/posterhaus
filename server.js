@@ -5,13 +5,25 @@ const path = require('path');
 const multer = require('multer');
 const session = require('express-session');
 const db = require('./db');
+const mongoDb = require('./mongoDb'); // IMPORT MONGODB
 
 const app = express();
+const PORT = 3026;
 
-// ── UPDATE THIS ──────────────────────────────────────────────────────────────
-// Change PORT if 3000 is already in use on your Raspberry Pi
-const PORT = 3000;
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Constants ───────────────────────────────────────────────────────────────
+const STANDARD_PRICE = 49;
+const CUSTOM_PRICE   = 59;
+const CATEGORIES = ['Anime','Cars','Gaming','Movies','Music','Quotes','Minimalist','Sports','Aesthetic','Memes'];
+
+// ─── Bundle Pricing ──────────────────────────────────────────────────────────
+// Greedy: maximize 3-bundles (₹99), then 2-bundles (₹79), then singles (₹49)
+function calcBundlePrice(standardQty) {
+  const threes = Math.floor(standardQty / 3);
+  const rem    = standardQty % 3;
+  const twos   = Math.floor(rem / 2);
+  const ones   = rem % 2;
+  return threes * 99 + twos * 79 + ones * 49;
+}
 
 // ─── Setup Uploads ───────────────────────────────────────────────────────────
 const P_WANTED_DIR = path.join(__dirname, 'P_wanted');
@@ -28,8 +40,18 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+// Admin upload — dynamic destination based on category
 const adminStorage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'posters/'),
+  destination: (req, file, cb) => {
+    const category = (req.body && req.body.category) || '';
+    let dest = 'posters/';
+    if (category && category !== 'General') {
+      dest = path.join('posters', category.toLowerCase()) + '/';
+      const fullPath = path.join(__dirname, dest);
+      if (!fs.existsSync(fullPath)) fs.mkdirSync(fullPath, { recursive: true });
+    }
+    cb(null, dest);
+  },
   filename: (req, file, cb) => cb(null, file.originalname)
 });
 const adminUpload = multer({ storage: adminStorage });
@@ -108,15 +130,33 @@ app.use(express.static('public'));
 app.use('/posters', express.static('posters'));
 app.use('/P_wanted', express.static('P_wanted'));
 
-// ─── Load Posters ─────────────────────────────────────────────────────────────
+// ─── Load Posters (Integration of MongoDB + MySQL + Folder Categories) ────────
 async function loadPosters() {
   const dir = path.join(__dirname, 'posters');
   if (!fs.existsSync(dir)) return [];
 
   const exts = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
-  const allFiles = fs.readdirSync(dir).filter(f =>
-    exts.includes(path.extname(f).toLowerCase())
-  );
+
+  // Scan root files + 1-level-deep subfolders for category detection
+  const allFiles = []; // { file: relative path, autoCategory: string }
+
+  // Root-level files → category: 'General'
+  const rootEntries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of rootEntries) {
+    if (entry.isFile() && exts.includes(path.extname(entry.name).toLowerCase())) {
+      allFiles.push({ file: entry.name, autoCategory: 'General' });
+    } else if (entry.isDirectory() && !entry.name.startsWith('.')) {
+      // Subfolder → category = folder name (title-cased)
+      const subCategory = entry.name.charAt(0).toUpperCase() + entry.name.slice(1).toLowerCase();
+      const subDir = path.join(dir, entry.name);
+      const subEntries = fs.readdirSync(subDir);
+      for (const subFile of subEntries) {
+        if (exts.includes(path.extname(subFile).toLowerCase())) {
+          allFiles.push({ file: path.join(entry.name, subFile).replace(/\\/g, '/'), autoCategory: subCategory });
+        }
+      }
+    }
+  }
 
   const orders = await db.getOrders();
   const fileStatus = new Map();
@@ -133,17 +173,41 @@ async function loadPosters() {
     }
   });
 
-  return allFiles.map((file, i) => {
+  const posters = [];
+  for (let i = 0; i < allFiles.length; i++) {
+    const { file, autoCategory } = allFiles[i];
     const status = fileStatus.get(file) || 'available';
-    if (status === 'sold') return null;
+    if (status === 'sold') continue;
 
     const id = `PST-${String(i + 1).padStart(3, '0')}`;
-    const name = path.basename(file, path.extname(file))
+    const baseName = path.basename(file, path.extname(file));
+    const name = baseName
       .replace(/[-_]/g, ' ')
       .replace(/\b\w/g, c => c.toUpperCase());
 
-    return { id, name, file, price: 60, status };
-  }).filter(Boolean);
+    // Check if poster already has an admin-assigned category in MongoDB
+    const existing = await mongoDb.getPosterByFile(file);
+    const category = (existing && existing.category && existing.category !== 'General')
+      ? existing.category
+      : autoCategory;
+    const tags = (existing && existing.tags && existing.tags.length > 0)
+      ? existing.tags
+      : [];
+
+    // NOSQL SYNC: Store/Update metadata in MongoDB
+    const mongoData = await mongoDb.upsertPoster({
+      posterId: id,
+      name,
+      file,
+      price: STANDARD_PRICE,
+      category,
+      tags,
+      isAvailable: status === 'available'
+    });
+
+    posters.push({ ...mongoData._doc, id: id, status });
+  }
+  return posters;
 }
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
@@ -156,6 +220,23 @@ app.get('/api/posters', async (req, res) => {
   }
 });
 
+// PERFORMANCE ANALYSIS ROUTE (TASK 6)
+app.get('/api/performance', async (req, res) => {
+  const startRel = Date.now();
+  await db.getOrders(); // Query MySQL
+  const relTime = Date.now() - startRel;
+
+  const startNoSql = Date.now();
+  await mongoDb.getAllPosters(); // Query MongoDB
+  const noSqlTime = Date.now() - startNoSql;
+
+  res.json({
+    relational_mysql_ms: relTime,
+    nosql_mongodb_ms: noSqlTime,
+    analysis: "Relational is slower for complex joins but better for consistency. NoSQL is faster for simple document retrieval."
+  });
+});
+
 app.post('/api/upload', upload.single('image'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   res.json({
@@ -164,7 +245,7 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
       id: `CUST-${Date.now()}`,
       name: 'Custom Print',
       file: req.file.filename,
-      price: 80,
+      price: CUSTOM_PRICE,
       isCustom: true
     }
   });
@@ -172,27 +253,63 @@ app.post('/api/upload', upload.single('image'), (req, res) => {
 
 app.post('/api/admin/upload-poster', requireAdmin, adminUpload.single('poster'), async (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-  await db.logAction(req.session.user.username, `Uploaded new standard poster: ${req.file.originalname}`);
-  res.json({ success: true });
+  const category = (req.body && req.body.category) || 'General';
+  await db.logAction(req.session.user.username, `Uploaded new standard poster: ${req.file.originalname} [${category}]`);
+  res.json({ success: true, category });
+});
+
+// ─── Admin Poster Classification ──────────────────────────────────────────────
+app.patch('/api/admin/poster/:file', requireAuth, async (req, res) => {
+  try {
+    const { category, tags } = req.body;
+    const file = decodeURIComponent(req.params.file);
+    const update = {};
+    if (category) update.category = category;
+    if (tags) update.tags = tags; // array of strings
+    const result = await mongoDb.updatePosterMeta(file, update);
+    if (!result) return res.status(404).json({ error: 'Poster not found' });
+    await db.logAction(req.session.user.username, `Updated poster metadata: ${file} → ${category || 'unchanged'}`);
+    res.json({ success: true, poster: result });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 app.post('/api/orders', async (req, res) => {
-  const { items, buyerName, buyerContact, utrNumber } = req.body;
+  const { items, buyerName, buyerPhone, hostel, roomNumber, utrNumber } = req.body;
   if (!items || !items.length) return res.status(400).json({ error: 'No items in order' });
   if (!buyerName || !utrNumber) return res.status(400).json({ error: 'Missing required fields' });
+
+  // Combine optional contact fields
+  const buyerContact = [buyerPhone, hostel, roomNumber].filter(Boolean).join(' | ');
+
+  // Server-side bundle pricing
+  const standardItems = items.filter(i => !i.isCustom);
+  const customItems   = items.filter(i => i.isCustom);
+  const standardTotal = calcBundlePrice(standardItems.length);
+  const customTotal   = customItems.length * CUSTOM_PRICE;
+  const totalAmount   = standardTotal + customTotal;
+
+  // Assign correct prices to items
+  // For standard items, distribute bundle price proportionally (or just store individual price)
+  const pricedItems = items.map(item => ({
+    ...item,
+    price: item.isCustom ? CUSTOM_PRICE : STANDARD_PRICE,
+    framed: false // V2.2: framing removed
+  }));
 
   const orderId = `ORD-${Date.now()}`;
   try {
     await db.addOrder({
       orderId,
-      items,
+      items: pricedItems,
       buyerName,
       buyerContact,
       utrNumber,
       status: 'pending',
       timestamp: new Date().toISOString()
     });
-    res.json({ success: true, orderId });
+    res.json({ success: true, orderId, totalAmount });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -205,14 +322,14 @@ app.post('/api/admin/mark-sold', requireAuth, async (req, res) => {
 
     const orderId = `SALE-${Date.now()}`;
     const user = req.session.user.username;
-    const finalPrice = customPrice ? parseInt(customPrice) : 60;
+    const finalPrice = customPrice ? parseInt(customPrice) : STANDARD_PRICE;
 
     await db.addOrder({
       orderId,
       items: [{ id: posterId, name: posterName, file: posterFile, price: finalPrice, isCustom: false, framed: false }],
       buyerName: 'In-Person Buyer',
-      buyerContact: 'At Stall',
-      utrNumber: 'STALL-SALE',
+      buyerContact: 'Cash Sale',
+      utrNumber: 'CASH-SALE',
       status: 'confirmed',
       timestamp: new Date().toISOString(),
       processedBy: user
@@ -251,13 +368,15 @@ app.patch('/api/orders/:id', requireAuth, async (req, res) => {
       if (newStatus === 'confirmed') {
         for (const item of order.items) {
           let logStr = `Item Sold: ${item.id} - ${item.name}`;
-          if (item.framed) logStr += ` (Framed)`;
-          logStr += ` | Price: ₹${item.price + (item.framed ? 250 : 0)}`;
+          logStr += ` | Price: ₹${item.price}`;
           if (!item.isCustom) {
             try {
-              const stats = fs.statSync(path.join(__dirname, 'posters', item.file));
-              const hours = ((new Date() - stats.birthtime) / 3600000).toFixed(1);
-              logStr += ` | Time to sell: ${hours}h`;
+              const filePath = path.join(__dirname, 'posters', item.file);
+              if (fs.existsSync(filePath)) {
+                const stats = fs.statSync(filePath);
+                const hours = ((new Date() - stats.birthtime) / 3600000).toFixed(1);
+                logStr += ` | Time to sell: ${hours}h`;
+              }
             } catch (_) {}
           }
           await db.logAction(user, logStr);
@@ -282,13 +401,17 @@ app.get('/api/logs', requireAdmin, async (req, res) => {
 });
 
 // ─── Start ────────────────────────────────────────────────────────────────────
-db.initDb().then(() => {
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`\n🖼️  PosterHaus running at:`);
-    console.log(`   Local:   http://localhost:${PORT}`);
-    console.log(`   Network: http://0.0.0.0:${PORT}`);
-    console.log(`\n   Admin:   http://localhost:${PORT}/admin.html\n`);
-  });
-}).catch(err => {
-  console.error('Failed to initialize database:', err);
-});
+async function startServer() {
+  try {
+    await db.initDb();
+    await mongoDb.initMongo();
+    
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`\n🖼️  PosterHaus running at: http://localhost:${PORT}`);
+    });
+  } catch (err) {
+    console.error('Failed to initialize databases:', err);
+  }
+}
+
+startServer();

@@ -4,64 +4,147 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin — PosterHaus Orders</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f8f7f4; --surface: #fff; --border: #e8e5e0;
-    --text: #1a1916; --muted: #8a8680; --accent: #2c2c2c;
-    --gold: #b8945a; --gold-light: #f0e8d8;
-    --success: #3a7d44; --danger: #c44; --warn: #b8720a;
+    --bg: #0F172A; --surface: #1E293B; --surface-2: #263348; --border: #334155;
+    --text: #F8FAFC; --muted: #94A3B8; --accent: #3B82F6;
+    --accent-glow: rgba(59,130,246,0.15);
+    --success: #22C55E; --danger: #EF4444; --warn: #F59E0B;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.2);
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Mono', monospace; background: var(--bg); color: var(--text); font-size: 13px; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 13px; }
+
   header { background: var(--surface); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10; }
-  .header-inner { max-width: 1000px; margin: 0 auto; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
-  .logo { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; }
-  .logo span { color: var(--gold); }
+  .header-inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; height: 56px; display: flex; align-items: center; justify-content: space-between; }
+  .logo { font-family: 'Poppins', sans-serif; font-size: 20px; font-weight: 700; color: var(--text); }
+  .logo span { color: var(--warn); }
   .back-link { font-size: 11px; color: var(--muted); text-decoration: none; transition: color 0.2s; }
   .back-link:hover { color: var(--text); }
-  .container { max-width: 1000px; margin: 0 auto; padding: 28px 24px; }
-  h2 { font-family: 'Cormorant Garamond', serif; font-size: 24px; font-weight: 500; margin-bottom: 6px; }
-  .stats { display: flex; gap: 16px; margin-bottom: 28px; flex-wrap: wrap; }
-  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 14px 20px; flex: 1; min-width: 130px; }
-  .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 30px; font-weight: 600; }
-  .stat-label { font-size: 10px; color: var(--muted); letter-spacing: 0.08em; }
-  .filter-bar { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; }
-  .filter-btn { border: 1px solid var(--border); background: var(--surface); padding: 6px 14px; border-radius: 3px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 11px; transition: all 0.2s; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 28px 24px; }
+  h2 { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 600; margin-bottom: 6px; }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
+  .stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; transition: transform 0.2s, box-shadow 0.2s; }
+  .stat:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .stat-num { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 700; }
+  .stat-label { font-size: 10px; color: var(--muted); letter-spacing: 0.08em; margin-top: 4px; }
+
+  .tab-bar { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+  .tab-btn { border: 1px solid var(--border); background: var(--surface); color: var(--muted); padding: 8px 18px; border-radius: var(--radius); cursor: pointer; font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 500; transition: all 0.2s; }
+  .tab-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .tab-btn:hover:not(.active) { border-color: var(--accent); color: var(--text); }
+
+  .filter-bar { display: flex; gap: 8px; margin-bottom: 18px; flex-wrap: wrap; }
+  .filter-btn { border: 1px solid var(--border); background: var(--surface); color: var(--muted); padding: 6px 14px; border-radius: 20px; cursor: pointer; font-family: 'Inter', sans-serif; font-size: 11px; transition: all 0.2s; }
   .filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
-  table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: 4px; overflow: hidden; border: 1px solid var(--border); }
-  th { background: #f5f3ef; text-align: left; padding: 10px 14px; font-size: 10px; color: var(--muted); letter-spacing: 0.1em; border-bottom: 1px solid var(--border); }
+
+  table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+  th { background: var(--surface-2); text-align: left; padding: 10px 14px; font-size: 10px; color: var(--muted); letter-spacing: 0.1em; border-bottom: 1px solid var(--border); }
   td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
   tr:last-child td { border-bottom: none; }
-  tr:hover td { background: #faf9f7; }
-  .status-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 10px; letter-spacing: 0.05em; }
-  .status-pending   { background: #fff8e8; color: var(--warn);    border: 1px solid #ead88a; }
-  .status-confirmed { background: #e8f5ec; color: var(--success); border: 1px solid #9dd1aa; }
-  .status-rejected  { background: #fde8e8; color: var(--danger);  border: 1px solid #f0a0a0; }
-  .action-btn { border: none; cursor: pointer; padding: 5px 12px; border-radius: 3px; font-family: 'DM Mono', monospace; font-size: 10px; margin-right: 4px; transition: opacity 0.2s; }
+  tr:hover td { background: var(--surface-2); }
+
+  .status-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 10px; letter-spacing: 0.05em; font-weight: 500; }
+  .status-pending   { background: rgba(245,158,11,0.15); color: var(--warn);    border: 1px solid rgba(245,158,11,0.3); }
+  .status-confirmed { background: rgba(34,197,94,0.15);  color: var(--success); border: 1px solid rgba(34,197,94,0.3); }
+  .status-rejected  { background: rgba(239,68,68,0.15);  color: var(--danger);  border: 1px solid rgba(239,68,68,0.3); }
+
+  .action-btn { border: none; cursor: pointer; padding: 5px 12px; border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 10px; font-weight: 500; margin-right: 4px; transition: opacity 0.2s; }
   .btn-confirm { background: var(--success); color: #fff; }
   .btn-reject  { background: var(--danger);  color: #fff; }
   .action-btn:hover { opacity: 0.8; }
-  .order-id   { color: var(--gold); letter-spacing: 0.06em; }
-  .poster-ids { font-size: 11px; color: var(--muted); max-width: 180px; }
+
+  .order-id   { color: var(--accent); letter-spacing: 0.06em; font-weight: 500; }
+  .poster-ids { font-size: 11px; color: var(--muted); max-width: 200px; }
   .empty { text-align: center; padding: 60px 0; color: var(--muted); }
-  .refresh-btn { background: none; border: 1px solid var(--border); padding: 6px 14px; border-radius: 3px; cursor: pointer; font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); transition: all 0.2s; }
+
+  .refresh-btn { background: none; border: 1px solid var(--border); padding: 6px 14px; border-radius: var(--radius); cursor: pointer; font-family: 'Inter', sans-serif; font-size: 11px; color: var(--muted); transition: all 0.2s; }
   .refresh-btn:hover { border-color: var(--accent); color: var(--text); }
-  .btn-secondary { background: none; border: 1px solid var(--border); color: var(--text); cursor: pointer; padding: 10px 20px; border-radius: 3px; font-family: 'DM Mono', monospace; font-size: 11px; transition: all 0.2s; text-decoration: none; display: inline-block; }
+  .btn-secondary { background: none; border: 1px solid var(--border); color: var(--text); cursor: pointer; padding: 10px 20px; border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 11px; transition: all 0.2s; text-decoration: none; display: inline-block; }
   .btn-secondary:hover { border-color: var(--accent); }
-  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 10px 20px; border-radius: 4px; font-size: 12px; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; padding: 12px 24px; border-radius: var(--radius); font-size: 12px; z-index: 999; opacity: 0; transition: opacity 0.3s; pointer-events: none; box-shadow: 0 4px 20px rgba(59,130,246,0.3); }
   .toast.show { opacity: 1; }
+
+  /* Inventory grid */
+  .inv-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+  .inv-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; transition: transform 0.2s; }
+  .inv-card:hover { transform: translateY(-2px); }
+  .inv-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; background: var(--surface-2); }
+  .inv-card select, .inv-card input[type="text"], .inv-card input[type="number"] {
+    width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); padding: 6px 8px;
+    border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 11px; margin-top: 4px; outline: none;
+  }
+  .inv-card select:focus, .inv-card input:focus { border-color: var(--accent); }
+  .inv-card label { font-size: 10px; color: var(--muted); letter-spacing: 0.05em; display: block; margin-top: 8px; }
+  .inv-save-btn { width: 100%; margin-top: 8px; background: var(--accent); color: #fff; border: none; padding: 6px; border-radius: 4px; font-size: 11px; cursor: pointer; transition: opacity 0.2s; }
+  .inv-save-btn:hover { opacity: 0.85; }
+  .inv-sold-btn { width: 100%; margin-top: 6px; background: var(--success); color: #fff; border: none; padding: 6px; border-radius: 4px; font-size: 11px; cursor: pointer; transition: opacity 0.2s; }
+  .inv-sold-btn:hover { opacity: 0.85; }
+
+  /* Analytics */
+  .analytics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+  .analytics-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+  .analytics-card h3 { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+  .analytics-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
+  .analytics-row:last-child { border-bottom: none; }
+  .analytics-bar { height: 6px; background: var(--accent); border-radius: 3px; margin-top: 4px; transition: width 0.3s; }
+
+  /* Upload modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .upload-modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; width: 90%; max-width: 400px; }
+  .upload-modal h3 { font-family: 'Poppins', sans-serif; margin-bottom: 16px; }
+  .upload-modal label { font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px; }
+  .upload-modal select, .upload-modal input { width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); padding: 8px 10px; border-radius: 4px; font-family: 'Inter', sans-serif; font-size: 12px; margin-bottom: 12px; }
+  .upload-modal .btn-primary { width: 100%; background: var(--accent); color: #fff; border: none; padding: 10px; border-radius: var(--radius); font-size: 12px; cursor: pointer; }
+  .upload-modal .btn-cancel { width: 100%; background: none; border: 1px solid var(--border); color: var(--muted); padding: 10px; border-radius: var(--radius); font-size: 12px; cursor: pointer; margin-top: 8px; }
+
+  @media (max-width: 768px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .analytics-grid { grid-template-columns: 1fr; }
+    table { font-size: 11px; }
+    td, th { padding: 8px 10px; }
+  }
 </style>
 </head>
 <body>
 <div class="toast" id="toast"></div>
 
+<!-- Upload Modal -->
+<div class="modal-overlay" id="upload-modal-overlay">
+  <div class="upload-modal">
+    <h3>Upload Poster</h3>
+    <label>CATEGORY</label>
+    <select id="upload-category">
+      <option value="General">General (Root folder)</option>
+      <option value="Anime">Anime</option>
+      <option value="Cars">Cars</option>
+      <option value="Gaming">Gaming</option>
+      <option value="Movies">Movies</option>
+      <option value="Music">Music</option>
+      <option value="Quotes">Quotes</option>
+      <option value="Minimalist">Minimalist</option>
+      <option value="Sports">Sports</option>
+      <option value="Aesthetic">Aesthetic</option>
+      <option value="Memes">Memes</option>
+    </select>
+    <label>POSTER IMAGE</label>
+    <input type="file" id="upload-file-input" accept="image/*">
+    <button class="btn-primary" onclick="submitUpload()">Upload →</button>
+    <button class="btn-cancel" onclick="closeUploadModal()">Cancel</button>
+  </div>
+</div>
+
 <header>
   <div class="header-inner">
-    <div class="logo">Poster<span>Haus</span> <span style="color:var(--muted);font-size:13px;font-family:'DM Mono',monospace;">/ Admin</span></div>
+    <div class="logo">Poster<span>Haus</span> <span style="color:var(--muted);font-size:13px;font-family:'Inter',sans-serif;font-weight:400;">/ Admin</span></div>
     <div style="display:flex; gap:16px; align-items:center;">
       <span id="user-info" style="font-size:11px; color:var(--muted); letter-spacing:0.05em;"></span>
-      <button onclick="logout()" style="background:none;border:none;cursor:pointer;color:var(--danger);font-family:'DM Mono';font-size:11px;text-decoration:underline;">Logout</button>
+      <button onclick="logout()" style="background:none;border:none;cursor:pointer;color:var(--danger);font-family:'Inter';font-size:11px;text-decoration:underline;">Logout</button>
       <a href="/" class="back-link">← Storefront</a>
     </div>
   </div>
@@ -69,22 +152,18 @@
 
 <div class="container">
   <!-- Admin-only controls: only visible to role === 'admin' -->
-  <div id="admin-controls" style="display:none; margin-bottom:28px; padding:20px; background:var(--surface); border:1px solid var(--border); border-radius:4px;">
-    <h3 style="font-family:'Cormorant Garamond'; margin-bottom:12px;">Master Admin Controls</h3>
+  <div id="admin-controls" style="display:none; margin-bottom:28px; padding:20px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);">
+    <h3 style="font-family:'Poppins'; margin-bottom:12px; font-size:14px;">Master Admin Controls</h3>
     <div style="display:flex; gap:10px; flex-wrap:wrap;">
-      <button class="btn-secondary" onclick="document.getElementById('poster-upload').click()">+ Upload Standard Poster (₹60)</button>
-      <!-- ── UPDATE THIS ──────────────────────────────────────────────────────
-           Place your QR image as 'public/qr.png' on the Raspberry Pi.
-           If you rename it, update the src in index.html too.
-      ──────────────────────────────────────────────────────────────────────── -->
-      <input type="file" id="poster-upload" style="display:none" accept="image/*" onchange="uploadStandardPoster(this)">
+      <button class="btn-secondary" onclick="openUploadModal()">+ Upload Standard Poster (₹49)</button>
       <a href="/api/logs" target="_blank" class="btn-secondary">View Sales Audit Logs</a>
     </div>
   </div>
 
-  <div class="filter-bar" style="margin-bottom:28px;">
-    <button class="filter-btn active" id="tab-orders"    onclick="switchTab('orders')">Orders Dashboard</button>
-    <button class="filter-btn"        id="tab-inventory" onclick="switchTab('inventory')">Manage Inventory</button>
+  <div class="tab-bar">
+    <button class="tab-btn active" id="tab-orders"    onclick="switchTab('orders')">Orders</button>
+    <button class="tab-btn"        id="tab-inventory" onclick="switchTab('inventory')">Inventory</button>
+    <button class="tab-btn"        id="tab-analytics" onclick="switchTab('analytics')">Analytics</button>
   </div>
 
   <!-- Orders Section -->
@@ -107,12 +186,20 @@
   <!-- Inventory Section -->
   <div id="section-inventory" style="display:none;">
     <h2>Manage Inventory</h2>
-    <p style="color:var(--muted);font-size:12px;margin-bottom:20px;">Manual sale entry for in-person purchases at the stall.</p>
-    <div id="inventory-grid" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:16px;"></div>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:20px;">Classify posters, update tags, and record cash/manual sales.</p>
+    <div class="inv-grid" id="inventory-grid"></div>
+  </div>
+
+  <!-- Analytics Section -->
+  <div id="section-analytics" style="display:none;">
+    <h2>Analytics</h2>
+    <p style="color:var(--muted);font-size:12px;margin-bottom:20px;">Revenue and performance insights from your order data.</p>
+    <div class="analytics-grid" id="analytics-container"></div>
   </div>
 </div>
 
 <script>
+const CATEGORIES = ['General','Anime','Cars','Gaming','Movies','Music','Quotes','Minimalist','Sports','Aesthetic','Memes'];
 let orders       = [];
 let allPosters   = [];
 let filter       = 'all';
@@ -120,119 +207,113 @@ let currentTab   = 'orders';
 let currentUser  = null;
 let autoRefreshTimer = null;
 
-// ── FIXED: auth check using /api/me — if not logged in, go to login page ─────
+// ── Auth ──────────────────────────────────────────────────────────────────────
 async function checkAuth() {
   try {
     const res = await fetch('/api/me');
-    if (!res.ok) {
-      window.location.replace('/login.html');
-      return;
-    }
+    if (!res.ok) { window.location.replace('/login.html'); return; }
     currentUser = await res.json();
-    document.getElementById('user-info').textContent =
-      `${currentUser.username} · ${currentUser.role}`;
-
-    // Only show upload + logs controls to admin
+    document.getElementById('user-info').textContent = `${currentUser.username} · ${currentUser.role}`;
     if (currentUser.role === 'admin') {
       document.getElementById('admin-controls').style.display = 'block';
     }
     loadData();
     startAutoRefresh();
-  } catch (_) {
-    window.location.replace('/login.html');
-  }
+  } catch (_) { window.location.replace('/login.html'); }
 }
 
 function startAutoRefresh() {
   clearInterval(autoRefreshTimer);
-  autoRefreshTimer = setInterval(() => {
-    if (currentTab === 'orders') loadData();
-  }, 15000);
+  autoRefreshTimer = setInterval(() => { if (currentTab === 'orders') loadData(); }, 15000);
 }
 
 async function loadData() {
   try {
-    const [ordersRes, postersRes] = await Promise.all([
-      fetch('/api/orders'),
-      fetch('/api/posters')
-    ]);
-
-    // ── FIXED: handle 401 mid-session (session expired) ──────────────────────
-    if (ordersRes.status === 401 || ordersRes.status === 403) {
-      window.location.replace('/login.html');
-      return;
-    }
-
+    const [ordersRes, postersRes] = await Promise.all([fetch('/api/orders'), fetch('/api/posters')]);
+    if (ordersRes.status === 401 || ordersRes.status === 403) { window.location.replace('/login.html'); return; }
     orders     = await ordersRes.json();
     allPosters = await postersRes.json();
     orders.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
-
     renderStats();
     renderOrders();
     renderInventory();
-  } catch (e) {
-    console.error('loadData failed:', e);
-  }
+    renderAnalytics();
+  } catch (e) { console.error('loadData failed:', e); }
 }
 
 function switchTab(tab) {
   currentTab = tab;
   document.getElementById('section-orders').style.display    = tab === 'orders'    ? 'block' : 'none';
   document.getElementById('section-inventory').style.display = tab === 'inventory' ? 'block' : 'none';
+  document.getElementById('section-analytics').style.display = tab === 'analytics' ? 'block' : 'none';
   document.getElementById('tab-orders').classList.toggle('active',    tab === 'orders');
   document.getElementById('tab-inventory').classList.toggle('active', tab === 'inventory');
+  document.getElementById('tab-analytics').classList.toggle('active', tab === 'analytics');
 }
 
-// ── Upload standard poster (admin only) ──────────────────────────────────────
-async function uploadStandardPoster(input) {
-  if (!input.files || !input.files[0]) return;
+// ── Upload Modal ──────────────────────────────────────────────────────────────
+function openUploadModal() {
+  document.getElementById('upload-modal-overlay').classList.add('open');
+  document.getElementById('upload-file-input').value = '';
+  document.getElementById('upload-category').value = 'General';
+}
+function closeUploadModal() {
+  document.getElementById('upload-modal-overlay').classList.remove('open');
+}
+
+async function submitUpload() {
+  const fileInput = document.getElementById('upload-file-input');
+  const category  = document.getElementById('upload-category').value;
+  if (!fileInput.files || !fileInput.files[0]) { showToast('Please select a file'); return; }
+
   const formData = new FormData();
-  formData.append('poster', input.files[0]);
+  formData.append('poster', fileInput.files[0]);
+  formData.append('category', category);
 
   try {
-    const res = await fetch('/api/admin/upload-poster', {
-      method: 'POST',
-      body: formData
-    });
+    const res = await fetch('/api/admin/upload-poster', { method: 'POST', body: formData });
     if (res.ok) {
-      showToast('✓ Poster uploaded successfully');
+      showToast(`✓ Poster uploaded to ${category}`);
+      closeUploadModal();
       await loadData();
     } else {
       const data = await res.json().catch(() => ({}));
       showToast('Upload failed: ' + (data.error || 'Unknown error'));
     }
-  } catch (err) {
-    showToast('Network error during upload');
-  }
-  input.value = ''; // reset input so same file can be re-uploaded
+  } catch (err) { showToast('Network error during upload'); }
 }
 
+// ── Inventory + Classification ────────────────────────────────────────────────
 function renderInventory() {
   const grid = document.getElementById('inventory-grid');
   if (!allPosters.length) {
-    grid.innerHTML = '<div class="empty">No available posters. Add images to the <strong>posters/</strong> folder on the Pi.</div>';
+    grid.innerHTML = '<div class="empty">No posters available yet.</div>';
     return;
   }
   grid.innerHTML = allPosters.map(p => `
-    <div class="stat" style="text-align:center; padding:15px;">
-      <img src="/posters/${encodeURIComponent(p.file)}"
-           style="width:100%; height:120px; object-fit:cover; border-radius:2px; margin-bottom:8px;"
-           onerror="this.style.display='none'">
-      <div style="font-size:11px; font-weight:600; margin-bottom:2px;">${p.name}</div>
-      <div style="font-size:10px; color:var(--gold); margin-bottom:8px;">
+    <div class="inv-card">
+      <img src="/posters/${encodeURIComponent(p.file)}" alt="${escapeHtml(p.name)}" onerror="this.style.display='none'">
+      <div style="font-size:12px; font-weight:600; margin-bottom:2px;">${escapeHtml(p.name)}</div>
+      <div style="font-size:10px; color:var(--accent); margin-bottom:4px;">
         ${p.id} ${p.status === 'reserved' ? '<span style="color:var(--warn)">[RESERVED]</span>' : ''}
       </div>
-      <div style="margin-bottom:8px; display:flex; align-items:center; gap:5px; justify-content:center;">
+      <label>CATEGORY</label>
+      <select id="cat-${p.id}" data-file="${escapeHtml(p.file)}">
+        ${CATEGORIES.map(c => `<option value="${c}" ${p.category === c ? 'selected' : ''}>${c}</option>`).join('')}
+      </select>
+      <label>TAGS <span style="color:var(--border)">(comma-separated)</span></label>
+      <input type="text" id="tags-${p.id}" value="${(p.tags || []).join(', ')}" placeholder="e.g. naruto, shonen">
+      <button class="inv-save-btn" onclick="savePosterMeta('${escapeHtml(p.id)}', '${escapeHtml(p.file)}')">Save Category & Tags</button>
+      <div style="margin-top:8px; display:flex; align-items:center; gap:5px;">
         <span style="font-size:10px; color:var(--muted);">₹</span>
-        <input type="number" id="price-${p.id}" value="60" min="1"
-          style="width:55px; border:1px solid var(--border); border-radius:2px; padding:2px 4px;
-                 font-family:'DM Mono'; font-size:11px; text-align:center;">
+        <input type="number" id="price-${p.id}" value="49" min="1"
+          style="width:55px; text-align:center;">
       </div>
-      <button class="action-btn btn-confirm js-mark-sold" style="width:100%;"
+      <button class="inv-sold-btn js-mark-sold"
         data-file="${escapeHtml(p.file)}"
         data-id="${escapeHtml(p.id)}"
         data-name="${escapeHtml(p.name)}">
-        ✓ Sold In-Person
+        ✓ Mark as Sold
       </button>
     </div>
   `).join('');
@@ -244,6 +325,25 @@ function renderInventory() {
   });
 }
 
+async function savePosterMeta(id, file) {
+  const category = document.getElementById(`cat-${id}`).value;
+  const tagsRaw  = document.getElementById(`tags-${id}`).value;
+  const tags     = tagsRaw.split(',').map(t => t.trim()).filter(Boolean);
+
+  try {
+    const res = await fetch(`/api/admin/poster/${encodeURIComponent(file)}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category, tags })
+    });
+    if (res.ok) {
+      showToast(`✓ Updated: ${category} | ${tags.join(', ') || 'no tags'}`);
+    } else {
+      showToast('Failed to update poster metadata');
+    }
+  } catch (_) { showToast('Network error'); }
+}
+
 async function logout() {
   clearInterval(autoRefreshTimer);
   await fetch('/api/logout', { method: 'POST' });
@@ -252,9 +352,8 @@ async function logout() {
 
 async function markAsSold(file, id, name) {
   const priceInput = document.getElementById(`price-${id}`);
-  const customPrice = priceInput ? priceInput.value : '60';
-
-  if (!confirm(`Mark "${name}" (${id}) as sold at the stall for ₹${customPrice}?`)) return;
+  const customPrice = priceInput ? priceInput.value : '49';
+  if (!confirm(`Mark "${name}" (${id}) as sold for ₹${customPrice}?`)) return;
 
   try {
     const res = await fetch('/api/admin/mark-sold', {
@@ -269,31 +368,45 @@ async function markAsSold(file, id, name) {
       const data = await res.json().catch(() => ({}));
       showToast('Failed: ' + (data.error || 'Unknown error'));
     }
-  } catch (_) {
-    showToast('Network error. Is the server running?');
-  }
+  } catch (_) { showToast('Network error. Is the server running?'); }
 }
 
+// ── Stats (8 cards) ───────────────────────────────────────────────────────────
 function renderStats() {
-  const total     = orders.length;
-  const pending   = orders.filter(o => o.status === 'pending').length;
-  const confirmed = orders.filter(o => o.status === 'confirmed').length;
-  let revenue = 0;
-  orders.filter(o => o.status === 'confirmed').forEach(o => {
-    (o.items || []).forEach(item => {
-      revenue += (item.price || 0);
-      if (item.framed) revenue += 250;
-    });
-  });
+  const now       = new Date();
+  const todayStr  = now.toISOString().slice(0, 10);
+  const weekAgo   = new Date(now - 7 * 86400000);
+  const monthAgo  = new Date(now - 30 * 86400000);
+
+  const confirmed = orders.filter(o => o.status === 'confirmed');
+  const pending   = orders.filter(o => o.status === 'pending');
+
+  function revenue(list) {
+    let total = 0;
+    list.forEach(o => { (o.items || []).forEach(item => { total += (item.price || 0); }); });
+    return total;
+  }
+
+  const todayOrders = confirmed.filter(o => o.timestamp && o.timestamp.startsWith(todayStr));
+  const weekOrders  = confirmed.filter(o => new Date(o.timestamp) >= weekAgo);
+  const monthOrders = confirmed.filter(o => new Date(o.timestamp) >= monthAgo);
+
+  let customCount = 0;
+  orders.forEach(o => { (o.items || []).forEach(item => { if (item.isCustom) customCount++; }); });
 
   document.getElementById('stats').innerHTML = `
-    <div class="stat"><div class="stat-num">${total}</div><div class="stat-label">TOTAL ORDERS</div></div>
-    <div class="stat"><div class="stat-num" style="color:var(--warn)">${pending}</div><div class="stat-label">PENDING</div></div>
-    <div class="stat"><div class="stat-num" style="color:var(--success)">${confirmed}</div><div class="stat-label">CONFIRMED</div></div>
-    <div class="stat"><div class="stat-num" style="color:var(--gold)">₹${revenue}</div><div class="stat-label">REVENUE</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--success)">₹${revenue(todayOrders)}</div><div class="stat-label">REVENUE TODAY</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--accent)">₹${revenue(weekOrders)}</div><div class="stat-label">THIS WEEK</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--warn)">₹${revenue(monthOrders)}</div><div class="stat-label">THIS MONTH</div></div>
+    <div class="stat"><div class="stat-num">₹${revenue(confirmed)}</div><div class="stat-label">TOTAL REVENUE</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--warn)">${pending.length}</div><div class="stat-label">PENDING</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--success)">${confirmed.length}</div><div class="stat-label">CONFIRMED</div></div>
+    <div class="stat"><div class="stat-num" style="color:var(--accent)">${customCount}</div><div class="stat-label">CUSTOM ORDERS</div></div>
+    <div class="stat"><div class="stat-num">${orders.length}</div><div class="stat-label">TOTAL ORDERS</div></div>
   `;
 }
 
+// ── Orders Table ──────────────────────────────────────────────────────────────
 function renderOrders() {
   const filtered = filter === 'all' ? orders : orders.filter(o => o.status === filter);
   const container = document.getElementById('orders-container');
@@ -316,14 +429,13 @@ function renderOrders() {
         ${filtered.map(o => {
           let amount = 0;
           const itemsHtml = (o.items || []).map(item => {
-            const itemPrice = (item.price || 0) + (item.framed ? 250 : 0);
+            const itemPrice = item.price || 0;
             amount += itemPrice;
-            const label     = item.isCustom ? 'Custom' : 'Standard';
-            const frameTag  = item.framed ? ' <span style="color:var(--success)">[Framed]</span>' : '';
-            const viewLink  = item.isCustom
-              ? ` <a href="/P_wanted/${encodeURIComponent(item.file)}" target="_blank" style="color:var(--gold)">view</a>`
+            const label = item.isCustom ? 'Custom' : 'Standard';
+            const viewLink = item.isCustom
+              ? ` <a href="/P_wanted/${encodeURIComponent(item.file)}" target="_blank" style="color:var(--accent)">view</a>`
               : '';
-            return `<div>${item.id}: ${label}${frameTag} (₹${item.price})${viewLink}</div>`;
+            return `<div>${item.id}: ${label} (₹${item.price})${viewLink}</div>`;
           }).join('');
 
           return `
@@ -353,6 +465,100 @@ function renderOrders() {
   `;
 }
 
+// ── Analytics ─────────────────────────────────────────────────────────────────
+function renderAnalytics() {
+  const container = document.getElementById('analytics-container');
+  const confirmed = orders.filter(o => o.status === 'confirmed');
+
+  // Category performance
+  const catCounts = {};
+  confirmed.forEach(o => {
+    (o.items || []).forEach(item => {
+      // Try to match poster to get category
+      const poster = allPosters.find(p => p.file === item.file);
+      const cat = (poster && poster.category) || 'Unknown';
+      catCounts[cat] = (catCounts[cat] || 0) + 1;
+    });
+  });
+  const topCats = Object.entries(catCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const maxCat = topCats.length > 0 ? topCats[0][1] : 1;
+
+  // Top posters
+  const posterCounts = {};
+  confirmed.forEach(o => {
+    (o.items || []).forEach(item => {
+      if (!item.isCustom) {
+        const key = item.name || item.id;
+        posterCounts[key] = (posterCounts[key] || 0) + 1;
+      }
+    });
+  });
+  const topPosters = Object.entries(posterCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const maxPoster = topPosters.length > 0 ? topPosters[0][1] : 1;
+
+  // Revenue by period
+  const now = new Date();
+  const periods = [
+    { label: 'Today', filter: o => o.timestamp && o.timestamp.startsWith(now.toISOString().slice(0, 10)) },
+    { label: 'Last 7 Days', filter: o => new Date(o.timestamp) >= new Date(now - 7 * 86400000) },
+    { label: 'Last 30 Days', filter: o => new Date(o.timestamp) >= new Date(now - 30 * 86400000) },
+    { label: 'All Time', filter: () => true },
+  ];
+
+  const revenueData = periods.map(p => {
+    const matching = confirmed.filter(p.filter);
+    let rev = 0;
+    matching.forEach(o => { (o.items || []).forEach(item => { rev += (item.price || 0); }); });
+    return { label: p.label, revenue: rev, count: matching.length };
+  });
+  const maxRev = Math.max(...revenueData.map(d => d.revenue), 1);
+
+  container.innerHTML = `
+    <div class="analytics-card">
+      <h3>📊 Revenue Summary</h3>
+      ${revenueData.map(d => `
+        <div class="analytics-row">
+          <span>${d.label}</span>
+          <span style="font-weight:600;">₹${d.revenue} <span style="color:var(--muted);font-weight:400;">(${d.count} orders)</span></span>
+        </div>
+        <div style="background:var(--border);border-radius:3px;height:6px;margin-bottom:8px;">
+          <div class="analytics-bar" style="width:${(d.revenue / maxRev * 100).toFixed(0)}%"></div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="analytics-card">
+      <h3>🏷️ Top Categories</h3>
+      ${topCats.length === 0 ? '<div style="color:var(--muted);font-size:12px;">No confirmed sales yet.</div>' :
+        topCats.map(([cat, count]) => `
+          <div class="analytics-row">
+            <span>${cat}</span>
+            <span style="font-weight:600;">${count} sold</span>
+          </div>
+          <div style="background:var(--border);border-radius:3px;height:6px;margin-bottom:8px;">
+            <div class="analytics-bar" style="width:${(count / maxCat * 100).toFixed(0)}%"></div>
+          </div>
+        `).join('')
+      }
+    </div>
+
+    <div class="analytics-card">
+      <h3>🔥 Top Posters</h3>
+      ${topPosters.length === 0 ? '<div style="color:var(--muted);font-size:12px;">No confirmed sales yet.</div>' :
+        topPosters.map(([name, count]) => `
+          <div class="analytics-row">
+            <span>${name}</span>
+            <span style="font-weight:600;">${count} sold</span>
+          </div>
+          <div style="background:var(--border);border-radius:3px;height:6px;margin-bottom:8px;">
+            <div class="analytics-bar" style="width:${(count / maxPoster * 100).toFixed(0)}%"></div>
+          </div>
+        `).join('')
+      }
+    </div>
+  `;
+}
+
 async function updateOrder(id, status) {
   try {
     const res = await fetch(`/api/orders/${id}`, {
@@ -364,9 +570,7 @@ async function updateOrder(id, status) {
       showToast(status === 'confirmed' ? '✓ Order confirmed' : '✕ Order rejected');
       await loadData();
     }
-  } catch (_) {
-    showToast('Failed to update order. Check connection.');
-  }
+  } catch (_) { showToast('Failed to update order. Check connection.'); }
 }
 
 function setFilter(f) {
@@ -386,11 +590,7 @@ function showToast(msg) {
 
 function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, ch => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[ch]));
 }
 

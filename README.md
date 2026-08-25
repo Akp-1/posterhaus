@@ -1,31 +1,38 @@
-# PosterHaus 🖼️
+# PosterHaus 🖼️ (V2.2 Online Side-Hustle Edition)
 
-PosterHaus is a minimalist, high-performance e-commerce prototype designed for selling posters. It features a sleek vanilla JS storefront, an administrative dashboard for order management, and a robust MySQL backend.
+PosterHaus is a minimalist, high-performance e-commerce platform designed for selling posters on college campuses. It features a modern dark-themed vanilla JS storefront, interactive bundle builder, automated category detection, admin classification tools, and a hybrid database architecture (MySQL + MongoDB).
+
+---
 
 ## 🚀 Key Features
-- **Modern Storefront**: Fast, responsive UI with zero heavy frameworks.
-- **Custom Prints**: Users can upload their own images for custom poster orders.
-- **Admin Dashboard**: Secure panel for verifying payments (UTR/Transaction IDs) and managing inventory.
-- **MySQL Persistence**: Reliable record-keeping for orders, items, and audit logs.
-- **Performance Optimized**: Built-in image compression for lightning-fast gallery loading.
+
+- **Modern Dark Storefront**: Responsive UI built with Poppins & Inter fonts without heavy frameworks.
+- **Dynamic Bundle Pricing**: Greedy bundle engine applied automatically (1 poster ₹49, 2 posters ₹79, 3 posters ₹99).
+- **Categorization & Filtering**: 10 curated categories (`Anime`, `Cars`, `Gaming`, `Movies`, `Music`, `Quotes`, `Minimalist`, `Sports`, `Aesthetic`, `Memes`) with search by name, category, or tags.
+- **Paginated Performance**: Loads 50 posters at a time for optimal bandwidth and fast page loads.
+- **Print-on-Demand (Custom Prints)**: Upload zone supporting JPG, PNG, WebP, PDF up to 10 MB (flat ₹59).
+- **Admin Dashboard & Analytics**: 8 financial/order stat cards, sales audit logs, analytics charts, and a live poster classification tool (category & tag override).
+- **Hybrid Database System**: MySQL for relational ACID order processing and audit logs + MongoDB for flexible poster catalog metadata.
 
 ---
 
 ## 🛠️ Tech Stack
+
 - **Frontend**: Vanilla HTML5, CSS3 (Custom Properties), JavaScript (ES6+).
 - **Backend**: Node.js, Express.
-- **Database**: MySQL 8.0+.
-- **Image Processing**: Sharp (for on-the-fly and batch compression).
+- **Databases**:
+  - **MySQL 8.0+**: Distributed pools for `posterhaus_orders` and `posterhaus_logs`.
+  - **MongoDB**: Poster catalog metadata and tags via Mongoose.
+- **Image Processing**: Sharp (for batch image optimization).
 
 ---
 
 ## 💻 Local Setup & Development
 
-Follow these steps to get the project running on your local machine.
-
 ### 1. Prerequisites
 - [Node.js](https://nodejs.org/) (v16 or higher)
 - [MySQL Server](https://dev.mysql.com/downloads/installer/)
+- [MongoDB Community Server](https://www.mongodb.com/try/download/community)
 
 ### 2. Clone the Repository
 ```bash
@@ -39,17 +46,16 @@ npm install
 ```
 
 ### 4. Database Configuration
-Create a file named `.env` in the root directory and add your MySQL credentials:
+Create a `.env` file in the root directory:
 ```env
 DB_HOST=localhost
 DB_USER=your_mysql_username
 DB_PASSWORD=your_mysql_password
-DB_NAME=posterhaus
+MONGO_URI=mongodb://localhost:27017/posterhaus
 ```
-*Note: The application will automatically create the `posterhaus` database and all required tables upon first run.*
 
 ### 5. Setup Assets
-- Place your poster images in the `/posters` directory.
+- Place your poster images in `/posters` (in root or inside subfolders like `/posters/anime/`).
 - Place your payment QR code at `public/qr.png`.
 
 ### 6. Run the Server
@@ -57,25 +63,31 @@ DB_NAME=posterhaus
 npm start
 ```
 The app will be available at:
-- **Storefront**: `http://localhost:3000`
-- **Admin Panel**: `http://localhost:3000/admin.html`
+- **Storefront**: `http://localhost:3026`
+- **Admin Panel**: `http://localhost:3026/admin.html`
 
 ---
 
 ## 📂 Project Structure
-- `/public`: Static assets, HTML storefront, and admin interface.
-- `/posters`: Standard poster image assets.
-- `/P_wanted`: Temporary storage for user-uploaded custom prints.
-- `server.js`: Express server and API routes.
-- `db.js`: MySQL connection logic and data migration scripts.
-- `compress-posters.js`: Utility script to optimize image assets.
+
+```
+.
+├── public/                # Static assets, HTML storefront, login, and admin interface
+├── posters/               # Poster image assets (root or subfolders e.g., posters/anime/)
+├── P_wanted/              # Temporary storage for custom print uploads
+├── server.js              # Monolith Express server, bundle pricing, and API routes
+├── db.js                  # MySQL connection pools (Orders & Audit Logs)
+├── mongoDb.js             # MongoDB Mongoose connection and poster metadata models
+├── compress-posters.js    # Utility script to optimize image assets (Sharp, 800px)
+└── agent.md               # Developer and Agent reference guide
+```
 
 ---
 
 ## 🔧 Maintenance Commands
 
-### Compress Images
-To optimize all images in the `posters` folder for web use (800px width, 70% quality):
+### Compress Poster Images
+To optimize all images in the `posters` directory for web use:
 ```bash
 node compress-posters.js
 ```
@@ -83,8 +95,11 @@ node compress-posters.js
 ---
 
 ## 🛡️ Security
-- **Authentication**: Admin credentials are hardcoded in `server.js` for this prototype. Update the `USERS` object before deploying.
-- **Environment Variables**: Never commit your `.env` file to version control. It is ignored by default via `.gitignore`.
+
+- **Authentication**: Admin credentials are managed in `server.js` via session authentication. Change default user passwords before deploying.
+- **Environment Variables**: Never commit `.env` files to version control.
+
+---
 
 ## 📄 License
 This project is open-source and available under the [ISC License](LICENSE).

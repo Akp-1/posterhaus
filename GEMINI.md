@@ -1,44 +1,47 @@
-# PosterHaus Project Overview
+# PosterHaus Project Overview (Distributed Edition)
 
-PosterHaus is a minimalist e-commerce application designed for selling posters. It features a straightforward storefront for customers and an administrative dashboard for order management and payment verification.
+PosterHaus is a distributed e-commerce application designed for selling posters. It features a hybrid database architecture (MySQL + MongoDB) to demonstrate scalability, distributed transactions, and NoSQL integration.
 
 ## 🚀 Technologies
 - **Backend:** Node.js, Express
 - **Frontend:** Vanilla HTML, CSS, and JavaScript
-- **Database:** Local JSON persistence (`orders.json`)
+- **Relational DB (Distributed):** MySQL (Vertical Fragmentation across `posterhaus_orders` and `posterhaus_logs`)
+- **NoSQL DB:** MongoDB (Metadata management for poster catalog)
 - **Assets:** Local file-based image management (`posters/` directory)
 
 ## 📂 Project Structure
-- `server.js`: The core Express server handling API routes and static file serving.
-- `posters/`: (Required) A directory for poster images (formats: `.jpg`, `.jpeg`, `.png`, `.webp`, `.gif`).
-- `public/`: (Required) Contains static files served by the server.
-    - `index.html`: The customer-facing storefront.
-    - `admin.html`: The administrative interface for order verification.
-- `orders.json`: (Auto-generated) Stores all order information including UTR numbers and status.
-- `package.json`: Project metadata and dependencies.
+- `server.js`: Core Express server with distributed routing and NoSQL sync.
+- `db.js`: MySQL management using distributed nodes for Orders and Audit Logs.
+- `mongoDb.js`: MongoDB integration for flexible poster metadata.
+- `posters/`: Directory for standard poster images.
+- `P_wanted/`: Directory for custom user-uploaded poster requests.
+- `PROJECT_REPORT.md`: Technical documentation for the distributed system.
+- `FINAL_PROJECT_REPORT.md`: Comprehensive academic report with placeholders.
 
 ## 🛠️ Building and Running
-1.  **Installation:** Dependencies are already initialized. Ensure Node.js is installed.
+1.  **Environment Setup:**
+    - Ensure MySQL and MongoDB are running.
+    - Configure `.env` with `DB_HOST`, `DB_USER`, `DB_PASSWORD`, and `MONGO_URI`.
+2.  **Installation:**
     ```bash
     npm install
     ```
-2.  **Configuration:** 
-    - Update `UPI_ID` and `SHOP_NAME` in `public/index.html` within the `<script>` section to match your payment details.
-    - Drop your images in the `posters/` directory.
 3.  **Start the Server:**
     ```bash
     npm start
     ```
-4.  **Accessing the App:**
-    - **Storefront:** `http://localhost:3000/`
-    - **Admin Panel:** `http://localhost:3000/admin.html`
+4.  **Key Endpoints:**
+    - **Performance Analysis:** `http://localhost:3000/api/performance`
+    - **Distributed Join Demo:** `http://localhost:3000/api/orders-full` (Admin required)
 
 ## 🎨 Development Conventions
-- **Clean Styling:** Uses a combination of 'Cormorant Garamond' for headings and 'DM Mono' for UI elements to maintain a premium feel.
-- **Stateless Frontend:** The frontend communicates with the backend via RESTful APIs (`/api/posters`, `/api/orders`).
-- **Manual Verification:** Payment is handled via UPI with manual UTR (Transaction ID) verification by the administrator.
+- **Distributed Transactions:** Orders are committed to Node 1 only after successful logging to Node 2 (ACID Simulation).
+- **Hybrid Data:** Poster display merges real-time file status from MySQL with rich metadata from MongoDB.
+- **Security:** Session-based authentication for Admin and Agent roles.
 
-## ✅ TODOs / Known Issues
-- [ ] Implement user authentication for the `admin.html` dashboard.
-- [ ] Add support for dynamic price updates from the admin panel.
-- [ ] Add image compression or thumbnail generation for the `posters/` folder.
+## ✅ Completed Academic Requirements
+- [x] Distributed Database Design (Fragmentation/Allocation)
+- [x] Transaction Management (ACID Concepts)
+- [x] NoSQL Integration (MongoDB CRUD)
+- [x] Distributed Queries (Application-layer joins)
+- [x] Performance Evaluation (Relational vs. NoSQL comparison)
