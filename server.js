@@ -85,6 +85,31 @@ app.use(session({
 
 app.use(express.json());
 
+// ─── Lazy DB Initialization for Serverless ────────────────────────────────────
+let dbInitPromise = null;
+async function ensureDbInitialized() {
+  if (!dbInitPromise) {
+    dbInitPromise = (async () => {
+      try {
+        await db.initDb();
+      } catch (err) {
+        console.error('MySQL Init Warning:', err.message);
+      }
+      try {
+        await mongoDb.initMongo();
+      } catch (err) {
+        console.error('MongoDB Init Warning:', err.message);
+      }
+    })();
+  }
+  return dbInitPromise;
+}
+
+app.use(async (req, res, next) => {
+  await ensureDbInitialized();
+  next();
+});
+
 // ─── Auth Middleware ──────────────────────────────────────────────────────────
 function requireAuth(req, res, next) {
   if (!req.session.user) return res.status(401).json({ error: 'Unauthorized' });
@@ -400,18 +425,16 @@ app.get('/api/logs', requireAdmin, async (req, res) => {
   }
 });
 
-// ─── Start ────────────────────────────────────────────────────────────────────
+// ─── Start / Export ───────────────────────────────────────────────────────────
 async function startServer() {
-  try {
-    await db.initDb();
-    await mongoDb.initMongo();
-    
-    app.listen(PORT, '0.0.0.0', () => {
-      console.log(`\n🖼️  PosterHaus running at: http://localhost:${PORT}`);
-    });
-  } catch (err) {
-    console.error('Failed to initialize databases:', err);
-  }
+  await ensureDbInitialized();
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`\n🖼️  PosterHaus running at: http://localhost:${PORT}`);
+  });
 }
 
-startServer();
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = app;
