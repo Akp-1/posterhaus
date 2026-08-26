@@ -1,704 +1,1857 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PosterHaus — Your Style on Every Wall</title>
-<meta name="description" content="Premium A4 poster prints on 300 GSM matte paper. Anime, gaming, movies, music & more. Starting at ₹49. Custom prints from ₹59.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0F172A;
-    --surface: #1E293B;
-    --surface-2: #263348;
-    --border: #334155;
-    --text: #F8FAFC;
-    --muted: #94A3B8;
-    --accent: #3B82F6;
-    --accent-hover: #2563EB;
-    --accent-glow: rgba(59,130,246,0.15);
-    --success: #22C55E;
-    --gold: #F59E0B;
-    --danger: #EF4444;
-    --radius: 8px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.2);
-    --shadow-lg: 0 8px 40px rgba(0,0,0,0.4);
-  }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; min-height: 100vh; overflow-x: hidden; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PosterHaus — Your Style on Every Wall</title>
+  <meta name="description"
+    content="Premium A4 poster prints on 300 GSM matte paper. Anime, gaming, movies, music & more. Starting at ₹49. Custom prints from ₹59.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #F8F7F4;
+      --surface: #FFFFFF;
+      --surface-2: #F1EEE7;
+      --border: #E8E5E0;
+      --text: #1A1916;
+      --muted: #8A8680;
+      --accent: #2C2C2C;
+      --accent-hover: #1A1916;
+      --accent-glow: rgba(184, 148, 90, 0.12);
+      --success: #6B8E63;
+      --gold: #B8945A;
+      --gold-soft: rgba(184, 148, 90, 0.10);
+      --danger: #CC4444;
+      --radius: 4px;
+      --shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+      --shadow-lg: 0 10px 34px rgba(0, 0, 0, 0.09);
+    }
 
-  /* ── Typography ─────────────────────────────────────────────────────────── */
-  h1, h2, h3 { font-family: 'Poppins', sans-serif; }
-  h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.1; }
-  h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; margin-bottom: 8px; }
-  h3 { font-size: 1.1rem; font-weight: 600; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  /* ── Header ─────────────────────────────────────────────────────────────── */
-  header {
-    background: rgba(15,23,42,0.85);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0; z-index: 100;
-  }
-  .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
-  .logo { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 800; color: var(--text); text-decoration: none; }
-  .logo span { color: var(--gold); }
-  nav { display: flex; align-items: center; gap: 28px; }
-  nav a { color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; transition: color 0.2s; letter-spacing: 0.02em; }
-  nav a:hover { color: var(--text); }
-  .cart-btn { background: var(--accent); color: #fff; border: none; cursor: pointer; padding: 8px 18px; border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
-  .cart-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
-  .cart-count { background: var(--gold); color: #000; border-radius: 50%; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; }
-  .nav-hamburger { display: none; background: none; border: none; color: var(--text); font-size: 24px; cursor: pointer; }
+    html {
+      scroll-behavior: smooth;
+    }
 
-  /* ── Container ──────────────────────────────────────────────────────────── */
-  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
-  .section { padding: 64px 0; }
-  .section-title { text-align: center; margin-bottom: 40px; }
-  .section-title p { color: var(--muted); font-size: 14px; margin-top: 8px; }
+    body {
+      font-family: 'DM Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 13px;
+      line-height: 1.6;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-  /* ── Hero ────────────────────────────────────────────────────────────────── */
-  .hero {
-    min-height: 85vh;
-    display: flex; align-items: center; justify-content: center;
-    background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 40%, #0F172A 100%);
-    position: relative; overflow: hidden; text-align: center;
-    padding: 80px 24px 60px;
-  }
-  .hero::before {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(circle at 30% 50%, rgba(59,130,246,0.08) 0%, transparent 60%),
-                radial-gradient(circle at 70% 30%, rgba(245,158,11,0.06) 0%, transparent 50%);
-  }
-  .hero-content { position: relative; z-index: 2; max-width: 700px; }
-  .hero-badge { display: inline-block; background: var(--accent-glow); border: 1px solid rgba(59,130,246,0.3); color: var(--accent); font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 20px; margin-bottom: 24px; letter-spacing: 0.04em; }
-  .hero h1 { margin-bottom: 20px; }
-  .hero h1 em { color: var(--gold); font-style: normal; }
-  .hero p { color: var(--muted); font-size: 16px; margin-bottom: 32px; max-width: 500px; margin-left: auto; margin-right: auto; }
-  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .btn-primary { background: var(--accent); color: #fff; border: none; cursor: pointer; padding: 14px 32px; border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; transition: all 0.2s; }
-  .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(59,130,246,0.3); }
-  .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); cursor: pointer; padding: 14px 32px; border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 500; transition: all 0.2s; text-decoration: none; }
-  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
-  .hero-posters { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
-  .hero-poster-float {
-    position: absolute; width: 180px; border-radius: 12px; box-shadow: var(--shadow-lg);
-    opacity: 0.15; filter: blur(1px);
-    animation: floatPoster 12s ease-in-out infinite;
-  }
-  .hero-poster-float:nth-child(1) { top: 15%; left: 5%; transform: rotate(-8deg); animation-delay: 0s; }
-  .hero-poster-float:nth-child(2) { top: 25%; right: 8%; transform: rotate(6deg); animation-delay: -4s; }
-  .hero-poster-float:nth-child(3) { bottom: 20%; left: 12%; transform: rotate(10deg); animation-delay: -8s; }
-  @keyframes floatPoster {
-    0%, 100% { transform: translateY(0) rotate(var(--rot, -8deg)); }
-    50% { transform: translateY(-20px) rotate(var(--rot, -8deg)); }
-  }
+    /* ── Typography ─────────────────────────────────────────────────────────── */
+    h1,
+    h2,
+    h3 {
+      font-family: 'Cormorant Garamond', serif;
+      color: var(--text);
+      font-weight: 600;
+    }
 
-  /* ── Pricing Banner ─────────────────────────────────────────────────────── */
-  .pricing-banner { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .pricing-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-  .price-card {
-    background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 28px 20px; text-align: center; transition: all 0.3s; position: relative;
-  }
-  .price-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--accent); }
-  .price-card.featured { border-color: var(--gold); background: linear-gradient(135deg, var(--surface-2) 0%, rgba(245,158,11,0.08) 100%); }
-  .price-badge { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--gold); color: #000; font-size: 10px; font-weight: 700; padding: 3px 12px; border-radius: 10px; letter-spacing: 0.05em; }
-  .price-card .amount { font-family: 'Poppins', sans-serif; font-size: 36px; font-weight: 800; color: var(--text); }
-  .price-card .amount small { font-size: 16px; font-weight: 500; color: var(--muted); }
-  .price-card .label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    h1 {
+      font-size: clamp(2.2rem, 5.5vw, 4rem);
+      font-weight: 600;
+      line-height: 1.1;
+    }
 
-  /* ── Categories ─────────────────────────────────────────────────────────── */
-  .cat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
-  .cat-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 20px 16px; text-align: center; cursor: pointer; transition: all 0.3s;
-  }
-  .cat-card:hover { transform: translateY(-3px); border-color: var(--accent); box-shadow: 0 4px 20px var(--accent-glow); }
-  .cat-card .emoji { font-size: 28px; margin-bottom: 8px; }
-  .cat-card .name { font-size: 12px; font-weight: 600; letter-spacing: 0.04em; }
+    h2 {
+      font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
 
-  /* ── Shop Grid ──────────────────────────────────────────────────────────── */
-  .toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
-  .search-input {
-    flex: 1; min-width: 200px; border: 1px solid var(--border); background: var(--surface);
-    color: var(--text); padding: 10px 16px; border-radius: var(--radius);
-    font-family: 'Inter', sans-serif; font-size: 13px; outline: none; transition: border-color 0.2s;
-  }
-  .search-input::placeholder { color: var(--muted); }
-  .search-input:focus { border-color: var(--accent); }
-  .sort-select {
-    border: 1px solid var(--border); background: var(--surface); color: var(--text);
-    padding: 10px 14px; border-radius: var(--radius); font-family: 'Inter', sans-serif;
-    font-size: 12px; outline: none; cursor: pointer;
-  }
-  .filter-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
-  .pill {
-    border: 1px solid var(--border); background: var(--surface); color: var(--muted);
-    padding: 6px 16px; border-radius: 20px; cursor: pointer; font-size: 12px; font-weight: 500;
-    transition: all 0.2s;
-  }
-  .pill.active, .pill:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
 
-  .poster-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
-  .card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    overflow: hidden; transition: all 0.3s; cursor: pointer; position: relative;
-  }
-  .card:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--accent); }
-  .card.selected { border-color: var(--gold); box-shadow: 0 0 0 2px rgba(245,158,11,0.2), var(--shadow); }
-  .card-img-wrap { width: 100%; aspect-ratio: 3/4; background: var(--surface-2); position: relative; overflow: hidden; }
-  .card-img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .card-badge { position: absolute; top: 8px; left: 8px; padding: 3px 10px; border-radius: 4px; font-size: 10px; font-weight: 600; letter-spacing: 0.04em; }
-  .badge-cat { background: var(--accent-glow); color: var(--accent); border: 1px solid rgba(59,130,246,0.3); }
-  .badge-best { background: rgba(245,158,11,0.15); color: var(--gold); border: 1px solid rgba(245,158,11,0.3); }
-  .badge-new { background: rgba(34,197,94,0.15); color: var(--success); border: 1px solid rgba(34,197,94,0.3); }
-  .card-select { position: absolute; top: 8px; right: 8px; background: var(--gold); color: #000; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; opacity: 0; transition: opacity 0.2s; }
-  .card.selected .card-select { opacity: 1; }
-  .reserved-badge { position: absolute; top: 8px; right: 8px; background: var(--danger); color: #fff; padding: 3px 10px; border-radius: 4px; font-size: 9px; font-weight: 700; letter-spacing: 0.06em; }
-  .card-body { padding: 14px 16px; }
-  .card-id { font-size: 10px; color: var(--accent); letter-spacing: 0.08em; font-weight: 600; margin-bottom: 3px; }
-  .card-name { font-family: 'Poppins', sans-serif; font-size: 14px; font-weight: 600; line-height: 1.3; }
-  .card-price { color: var(--gold); font-size: 13px; font-weight: 600; margin-top: 4px; }
-  .card-add-btn { width: 100%; margin-top: 10px; background: var(--accent-glow); color: var(--accent); border: 1px solid rgba(59,130,246,0.3); padding: 8px; border-radius: var(--radius); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-  .card-add-btn:hover { background: var(--accent); color: #fff; }
+    /* ── Header ─────────────────────────────────────────────────────────────── */
+    header {
+      background: rgba(248, 247, 244, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
 
-  .card.reserved { opacity: 0.6; cursor: not-allowed; }
-  .card.reserved .card-add-btn { display: none; }
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
 
-  /* Skeleton */
-  .skeleton { background: var(--surface-2); animation: shimmer 1.5s infinite; }
-  @keyframes shimmer { 0% { opacity: 0.6; } 50% { opacity: 1; } 100% { opacity: 0.6; } }
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text);
+      text-decoration: none;
+    }
 
-  .load-more-wrap { text-align: center; padding: 32px 0; }
-  .load-more-btn { background: var(--surface); color: var(--text); border: 1px solid var(--border); padding: 12px 40px; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
-  .load-more-btn:hover { border-color: var(--accent); color: var(--accent); }
-  .count-badge { color: var(--muted); font-size: 12px; white-space: nowrap; }
+    .logo span {
+      color: var(--gold);
+    }
 
-  /* ── Bundle Builder ─────────────────────────────────────────────────────── */
-  .bundle-section { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-  .bundle-summary {
-    background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;
-  }
-  .bundle-info { flex: 1; }
-  .bundle-savings { color: var(--success); font-weight: 600; font-size: 14px; margin-top: 4px; }
-  .bundle-total { font-family: 'Poppins', sans-serif; font-size: 32px; font-weight: 800; }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
 
-  /* ── Custom Upload ──────────────────────────────────────────────────────── */
-  .upload-zone {
-    border: 2px dashed var(--border); border-radius: var(--radius);
-    padding: 48px 24px; text-align: center; cursor: pointer;
-    transition: all 0.3s; background: var(--surface);
-  }
-  .upload-zone:hover { border-color: var(--accent); background: var(--accent-glow); }
-  .upload-zone .icon { font-size: 48px; margin-bottom: 12px; }
-  .upload-preview { display: none; margin-top: 16px; text-align: center; }
-  .upload-preview img { max-width: 200px; max-height: 250px; border-radius: var(--radius); border: 1px solid var(--border); }
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 400;
+      transition: color 0.2s;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
 
-  /* ── Cart Sidebar ───────────────────────────────────────────────────────── */
-  .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); opacity: 0; pointer-events: none; transition: opacity 0.3s; z-index: 200; }
-  .overlay.open { opacity: 1; pointer-events: all; }
-  .sidebar { position: fixed; top: 0; right: -480px; width: 440px; height: 100%; background: var(--surface); border-left: 1px solid var(--border); transition: right 0.3s cubic-bezier(0.4,0,0.2,1); z-index: 201; display: flex; flex-direction: column; overflow: hidden; }
-  .sidebar.open { right: 0; }
-  .sidebar-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-  .sidebar-title { font-family: 'Poppins', sans-serif; font-size: 18px; font-weight: 600; }
-  .close-btn { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 20px; padding: 4px; transition: color 0.2s; }
-  .close-btn:hover { color: var(--text); }
-  .sidebar-body { flex: 1; overflow-y: auto; padding: 20px 24px; }
-  .cart-empty { text-align: center; color: var(--muted); padding: 40px 0; }
-  .cart-item { display: flex; gap: 12px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); }
-  .cart-item-img { width: 48px; height: 64px; object-fit: cover; border-radius: 4px; background: var(--surface-2); flex-shrink: 0; }
-  .cart-item-info { flex: 1; }
-  .cart-item-cat { font-size: 10px; color: var(--accent); font-weight: 600; letter-spacing: 0.05em; }
-  .cart-item-name { font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 500; }
-  .cart-item-price { font-size: 12px; color: var(--muted); }
-  .remove-btn { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 16px; padding: 4px; transition: color 0.2s; }
-  .remove-btn:hover { color: var(--danger); }
-  .sidebar-footer { padding: 20px 24px; border-top: 1px solid var(--border); background: var(--surface-2); flex-shrink: 0; }
-  .cart-savings { color: var(--success); font-size: 12px; font-weight: 600; margin-bottom: 8px; }
-  .total-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
-  .total-label { font-size: 12px; color: var(--muted); }
-  .total-amount { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; }
-  .checkout-btn { width: 100%; background: var(--accent); color: #fff; border: none; cursor: pointer; padding: 14px; border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 600; transition: all 0.2s; }
-  .checkout-btn:hover { background: var(--accent-hover); }
-  .checkout-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    nav a:hover {
+      color: var(--text);
+    }
 
-  /* ── Checkout Modal ─────────────────────────────────────────────────────── */
-  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 300; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-  .modal-overlay.open { opacity: 1; pointer-events: all; }
-  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; width: 90%; max-width: 480px; max-height: 90vh; overflow-y: auto; padding: 32px; transform: scale(0.96); transition: transform 0.3s; }
-  .modal-overlay.open .modal { transform: scale(1); }
-  .modal-title { font-family: 'Poppins', sans-serif; font-size: 22px; font-weight: 700; margin-bottom: 8px; }
-  .modal-sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
-  .qr-section { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; text-align: center; margin-bottom: 24px; }
-  .qr-section img { width: 180px; height: 180px; border-radius: 8px; margin-bottom: 12px; background: #fff; padding: 8px; border: 1px solid var(--border); }
-  .qr-placeholder { width: 180px; height: 180px; margin: 0 auto 12px; border: 2px dashed var(--border); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 11px; text-align: center; padding: 12px; }
-  .qr-amount { font-family: 'Poppins', sans-serif; font-size: 28px; font-weight: 700; }
-  .qr-upi { font-size: 12px; color: var(--muted); margin-top: 4px; }
-  .form-group { margin-bottom: 16px; }
-  .form-label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 6px; letter-spacing: 0.05em; font-weight: 500; }
-  .form-input { width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); padding: 11px 14px; border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 13px; outline: none; transition: border-color 0.2s; }
-  .form-input::placeholder { color: var(--muted); }
-  .form-input:focus { border-color: var(--accent); }
-  .form-note { font-size: 10px; color: var(--muted); margin-top: 4px; }
-  .modal-actions { display: flex; gap: 10px; margin-top: 24px; }
-  .btn-secondary { background: none; border: 1px solid var(--border); color: var(--text); cursor: pointer; padding: 12px 20px; border-radius: var(--radius); font-family: 'Inter', sans-serif; font-size: 13px; font-weight: 500; transition: all 0.2s; }
-  .btn-secondary:hover { border-color: var(--accent); }
-  .success-card { text-align: center; padding: 16px 0; }
-  .success-icon { font-size: 48px; margin-bottom: 16px; }
-  .success-title { font-family: 'Poppins', sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 8px; }
-  .order-id-box { background: var(--accent-glow); border: 1px solid rgba(59,130,246,0.3); border-radius: var(--radius); padding: 14px; font-family: 'Inter', sans-serif; font-size: 14px; letter-spacing: 0.1em; color: var(--accent); font-weight: 600; margin: 16px 0; }
-  .next-steps-box { background: var(--surface-2); border: 1px solid var(--border); padding: 16px; border-radius: var(--radius); text-align: left; }
+    .cart-btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      padding: 9px 18px;
+      border-radius: var(--radius);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: opacity 0.2s;
+    }
 
-  /* ── Recently Purchased Popup ───────────────────────────────────────────── */
-  .recent-popup {
-    position: fixed; bottom: 24px; left: 24px; background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius); padding: 14px 20px; box-shadow: var(--shadow-lg); z-index: 150;
-    display: flex; align-items: center; gap: 12px; max-width: 320px;
-    transform: translateX(-120%); transition: transform 0.4s cubic-bezier(0.4,0,0.2,1);
-  }
-  .recent-popup.show { transform: translateX(0); }
-  .recent-popup .dot { width: 8px; height: 8px; background: var(--success); border-radius: 50%; flex-shrink: 0; animation: pulse 2s infinite; }
-  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-  .recent-popup .msg { font-size: 12px; color: var(--text); flex: 1; }
-  .recent-popup .close-popup { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; flex-shrink: 0; }
+    .cart-btn:hover {
+      opacity: 0.85;
+    }
 
-  /* ── Floating Instagram ─────────────────────────────────────────────────── */
-  .float-ig {
-    position: fixed; bottom: 24px; right: 24px; width: 52px; height: 52px;
-    background: linear-gradient(135deg, #833AB4, #FD1D1D, #F77737);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 4px 20px rgba(131,58,180,0.4); z-index: 150;
-    text-decoration: none; transition: transform 0.3s;
-  }
-  .float-ig:hover { transform: scale(1.1); }
-  .float-ig svg { width: 24px; height: 24px; fill: #fff; }
+    .cart-count {
+      background: var(--gold);
+      color: #fff;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: 500;
+    }
 
-  /* ── Bulk CTA ───────────────────────────────────────────────────────────── */
-  .bulk-cta {
-    background: linear-gradient(135deg, var(--surface-2) 0%, rgba(59,130,246,0.08) 100%);
-    border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 24px 32px; text-align: center; margin-top: 32px;
-  }
-  .bulk-cta a { color: var(--accent); text-decoration: none; font-weight: 600; }
-  .bulk-cta a:hover { text-decoration: underline; }
+    .nav-hamburger {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 22px;
+      cursor: pointer;
+    }
 
-  /* ── Footer ─────────────────────────────────────────────────────────────── */
-  footer { background: var(--surface); border-top: 1px solid var(--border); padding: 40px 24px; text-align: center; }
-  footer .logo { font-size: 18px; margin-bottom: 8px; display: inline-block; }
-  footer p { color: var(--muted); font-size: 12px; margin-top: 4px; }
-  footer .links { margin-top: 12px; display: flex; gap: 20px; justify-content: center; }
-  footer .links a { color: var(--muted); text-decoration: none; font-size: 12px; transition: color 0.2s; }
-  footer .links a:hover { color: var(--accent); }
+    /* ── Container ──────────────────────────────────────────────────────────── */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
 
-  /* ── Mobile Bottom Nav ──────────────────────────────────────────────────── */
-  .mobile-nav {
-    display: none; position: fixed; bottom: 0; left: 0; right: 0;
-    background: var(--surface); border-top: 1px solid var(--border);
-    z-index: 100; padding: 8px 0; padding-bottom: env(safe-area-inset-bottom, 8px);
-  }
-  .mobile-nav-inner { display: flex; justify-content: space-around; }
-  .mobile-nav a {
-    display: flex; flex-direction: column; align-items: center; gap: 2px;
-    color: var(--muted); text-decoration: none; font-size: 10px; font-weight: 500;
-    transition: color 0.2s; padding: 4px 0;
-  }
-  .mobile-nav a.active { color: var(--accent); }
-  .mobile-nav a .icon { font-size: 18px; }
+    .section {
+      padding: 64px 0;
+    }
 
-  /* ── Responsive ─────────────────────────────────────────────────────────── */
-  @media (max-width: 768px) {
-    nav { display: none; }
-    .nav-hamburger { display: block; }
-    .mobile-nav { display: block; }
-    body { padding-bottom: 70px; }
-    .pricing-grid { grid-template-columns: repeat(2, 1fr); }
-    .poster-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-    .sidebar { width: 100%; right: -100%; }
-    .modal { padding: 24px; }
-    .hero { min-height: 70vh; padding: 60px 20px 40px; }
-    h1 { font-size: 2rem; }
-    .bundle-summary { flex-direction: column; text-align: center; }
-    .float-ig { bottom: 80px; }
-    .recent-popup { bottom: 80px; }
-    .cat-grid { grid-template-columns: repeat(3, 1fr); }
-  }
-  @media (max-width: 400px) {
-    .poster-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
-    .cat-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-</style>
+    .section-title {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .section-title p {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 8px;
+      letter-spacing: 0.03em;
+    }
+
+    /* ── Hero ────────────────────────────────────────────────────────────────── */
+    .hero {
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F1EEE7 100%);
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      padding: 80px 24px 60px;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 30% 40%, rgba(184, 148, 90, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 72% 25%, rgba(44, 44, 44, 0.03) 0%, transparent 50%);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 700px;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: var(--gold-soft);
+      border: 1px solid rgba(184, 148, 90, 0.35);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin-bottom: 20px;
+    }
+
+    .hero h1 em {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 15px;
+      margin-bottom: 32px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      padding: 14px 30px;
+      border-radius: var(--radius);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: opacity 0.2s;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.85;
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      padding: 14px 30px;
+      border-radius: var(--radius);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .hero-posters {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .hero-poster-float {
+      position: absolute;
+      width: 180px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      opacity: 0.18;
+      filter: blur(0.5px);
+      animation: floatPoster 12s ease-in-out infinite;
+    }
+
+    .hero-poster-float:nth-child(1) {
+      top: 15%;
+      left: 5%;
+      transform: rotate(-8deg);
+      animation-delay: 0s;
+    }
+
+    .hero-poster-float:nth-child(2) {
+      top: 25%;
+      right: 8%;
+      transform: rotate(6deg);
+      animation-delay: -4s;
+    }
+
+    .hero-poster-float:nth-child(3) {
+      bottom: 20%;
+      left: 12%;
+      transform: rotate(10deg);
+      animation-delay: -8s;
+    }
+
+    @keyframes floatPoster {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(var(--rot, -8deg));
+      }
+
+      50% {
+        transform: translateY(-20px) rotate(var(--rot, -8deg));
+      }
+    }
+
+    /* ── Pricing Banner ─────────────────────────────────────────────────────── */
+    .pricing-banner {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .price-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      transition: all 0.3s;
+      position: relative;
+    }
+
+    .price-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow);
+      border-color: var(--gold);
+    }
+
+    .price-card.featured {
+      border-color: var(--gold);
+      background: linear-gradient(180deg, #FFFFFF 0%, var(--gold-soft) 100%);
+    }
+
+    .price-badge {
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gold);
+      color: #fff;
+      font-size: 9px;
+      font-weight: 500;
+      padding: 3px 12px;
+      border-radius: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .price-card .amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 38px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .price-card .amount small {
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--muted);
+    }
+
+    .price-card .label {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* ── Categories ─────────────────────────────────────────────────────────── */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .cat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .cat-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--gold);
+      box-shadow: 0 4px 16px var(--gold-soft);
+    }
+
+    .cat-card .emoji {
+      font-size: 26px;
+      margin-bottom: 8px;
+    }
+
+    .cat-card .name {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    /* ── Shop Grid ──────────────────────────────────────────────────────────── */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 200px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: var(--radius);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input::placeholder {
+      color: var(--muted);
+    }
+
+    .search-input:focus {
+      border-color: var(--gold);
+    }
+
+    .sort-select {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .pill {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      padding: 6px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      transition: all 0.2s;
+    }
+
+    .pill.active,
+    .pill:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .poster-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: all 0.3s;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+      border-color: var(--gold);
+    }
+
+    .card.selected {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 2px var(--gold-soft), var(--shadow);
+    }
+
+    .card-img-wrap {
+      width: 100%;
+      aspect-ratio: 3/4;
+      background: var(--surface-2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      padding: 3px 10px;
+      border-radius: 3px;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .badge-cat {
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
+
+    .badge-best {
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--gold);
+      border: 1px solid rgba(184, 148, 90, 0.35);
+    }
+
+    .badge-new {
+      background: rgba(255, 255, 255, 0.94);
+      color: var(--success);
+      border: 1px solid rgba(107, 142, 99, 0.35);
+    }
+
+    .card-select {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--gold);
+      color: #fff;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .card.selected .card-select {
+      opacity: 1;
+    }
+
+    .reserved-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: var(--danger);
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 3px;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .card-body {
+      padding: 14px 16px;
+    }
+
+    .card-id {
+      font-size: 10px;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      font-weight: 500;
+      margin-bottom: 3px;
+    }
+
+    .card-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      font-weight: 600;
+      line-height: 1.3;
+    }
+
+    .card-price {
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+
+    .card-add-btn {
+      width: 100%;
+      margin-top: 10px;
+      background: var(--surface-2);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 8px;
+      border-radius: var(--radius);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .card-add-btn:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .card.reserved {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .card.reserved .card-add-btn {
+      display: none;
+    }
+
+    /* Skeleton */
+    .skeleton {
+      background: var(--surface-2);
+      animation: shimmer 1.5s infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        opacity: 0.6;
+      }
+
+      50% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0.6;
+      }
+    }
+
+    .load-more-wrap {
+      text-align: center;
+      padding: 32px 0;
+    }
+
+    .load-more-btn {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      padding: 12px 40px;
+      border-radius: var(--radius);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .load-more-btn:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+    }
+
+    .count-badge {
+      color: var(--muted);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    /* ── Bundle Builder ─────────────────────────────────────────────────────── */
+    .bundle-section {
+      background: var(--surface-2);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .bundle-summary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .bundle-info {
+      flex: 1;
+    }
+
+    .bundle-savings {
+      color: var(--success);
+      font-family: 'DM Mono', monospace;
+      font-weight: 500;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .bundle-total {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      font-weight: 600;
+    }
+
+    /* ── Custom Upload ──────────────────────────────────────────────────────── */
+    .upload-zone {
+      border: 1.5px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 48px 24px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+      background: var(--surface);
+    }
+
+    .upload-zone:hover {
+      border-color: var(--gold);
+      background: var(--gold-soft);
+    }
+
+    .upload-zone .icon {
+      font-size: 44px;
+      margin-bottom: 12px;
+    }
+
+    .upload-preview {
+      display: none;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .upload-preview img {
+      max-width: 200px;
+      max-height: 250px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    /* ── Cart Sidebar ───────────────────────────────────────────────────────── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 25, 22, 0.35);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 200;
+    }
+
+    .overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -480px;
+      width: 440px;
+      height: 100%;
+      background: var(--surface);
+      border-left: 1px solid var(--border);
+      transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 201;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar.open {
+      right: 0;
+    }
+
+    .sidebar-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+
+    .sidebar-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 20px;
+      padding: 4px;
+      transition: color 0.2s;
+    }
+
+    .close-btn:hover {
+      color: var(--text);
+    }
+
+    .sidebar-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px;
+    }
+
+    .cart-empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 40px 0;
+    }
+
+    .cart-item {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cart-item-img {
+      width: 48px;
+      height: 64px;
+      object-fit: cover;
+      border-radius: 3px;
+      background: var(--surface-2);
+      flex-shrink: 0;
+    }
+
+    .cart-item-info {
+      flex: 1;
+    }
+
+    .cart-item-cat {
+      font-size: 9px;
+      color: var(--gold);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .cart-item-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .cart-item-price {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .remove-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--muted);
+      font-size: 16px;
+      padding: 4px;
+      transition: color 0.2s;
+    }
+
+    .remove-btn:hover {
+      color: var(--danger);
+    }
+
+    .sidebar-footer {
+      padding: 20px 24px;
+      border-top: 1px solid var(--border);
+      background: var(--surface-2);
+      flex-shrink: 0;
+    }
+
+    .cart-savings {
+      color: var(--success);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .total-label {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .total-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 600;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      padding: 14px;
+      border-radius: var(--radius);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+
+    .checkout-btn:hover {
+      opacity: 0.85;
+    }
+
+    .checkout-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    /* ── Checkout Modal ─────────────────────────────────────────────────────── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26, 25, 22, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      width: 90%;
+      max-width: 480px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 32px;
+      transform: scale(0.96);
+      transition: transform 0.3s;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .modal-overlay.open .modal {
+      transform: scale(1);
+    }
+
+    .modal-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .modal-sub {
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 24px;
+    }
+
+    .qr-section {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .qr-section img {
+      width: 180px;
+      height: 180px;
+      border-radius: 4px;
+      margin-bottom: 12px;
+      background: #fff;
+      padding: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .qr-placeholder {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 12px;
+      border: 2px dashed var(--border);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+      padding: 12px;
+    }
+
+    .qr-amount {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    .qr-upi {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 10px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing: 0.06em;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+
+    .form-input {
+      width: 100%;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      padding: 11px 14px;
+      border-radius: var(--radius);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-input::placeholder {
+      color: var(--muted);
+    }
+
+    .form-input:focus {
+      border-color: var(--gold);
+    }
+
+    .form-note {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .btn-secondary {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text);
+      cursor: pointer;
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      font-family: 'DM Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--gold);
+    }
+
+    .success-card {
+      text-align: center;
+      padding: 16px 0;
+    }
+
+    .success-icon {
+      font-size: 44px;
+      margin-bottom: 16px;
+    }
+
+    .success-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .order-id-box {
+      background: var(--gold-soft);
+      border: 1px solid rgba(184, 148, 90, 0.3);
+      border-radius: var(--radius);
+      padding: 14px;
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      font-weight: 500;
+      margin: 16px 0;
+    }
+
+    .next-steps-box {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      padding: 16px;
+      border-radius: var(--radius);
+      text-align: left;
+    }
+
+    /* ── Recently Purchased Popup ───────────────────────────────────────────── */
+    .recent-popup {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 20px;
+      box-shadow: var(--shadow-lg);
+      z-index: 150;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      max-width: 320px;
+      transform: translateX(-120%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .recent-popup.show {
+      transform: translateX(0);
+    }
+
+    .recent-popup .dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    .recent-popup .msg {
+      font-size: 11px;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .recent-popup .close-popup {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    /* ── Floating Instagram ─────────────────────────────────────────────────── */
+    .float-ig {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 52px;
+      height: 52px;
+      background: linear-gradient(135deg, #833AB4, #FD1D1D, #F77737);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-lg);
+      z-index: 150;
+      text-decoration: none;
+      transition: transform 0.3s;
+    }
+
+    .float-ig:hover {
+      transform: scale(1.1);
+    }
+
+    .float-ig svg {
+      width: 24px;
+      height: 24px;
+      fill: #fff;
+    }
+
+    /* ── Bulk CTA ───────────────────────────────────────────────────────────── */
+    .bulk-cta {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 32px;
+      text-align: center;
+      margin-top: 32px;
+    }
+
+    .bulk-cta a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .bulk-cta a:hover {
+      text-decoration: underline;
+    }
+
+    /* ── Footer ─────────────────────────────────────────────────────────────── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    footer .logo {
+      font-size: 20px;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+
+    footer p {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 4px;
+    }
+
+    footer .links {
+      margin-top: 12px;
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    footer .links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    footer .links a:hover {
+      color: var(--gold);
+    }
+
+    /* ── Mobile Bottom Nav ──────────────────────────────────────────────────── */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      z-index: 100;
+      padding: 8px 0;
+      padding-bottom: env(safe-area-inset-bottom, 8px);
+    }
+
+    .mobile-nav-inner {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .mobile-nav a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      padding: 4px 0;
+    }
+
+    .mobile-nav a.active {
+      color: var(--gold);
+    }
+
+    .mobile-nav a .icon {
+      font-size: 18px;
+    }
+
+    /* ── Responsive ─────────────────────────────────────────────────────────── */
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+      }
+
+      .nav-hamburger {
+        display: block;
+      }
+
+      .mobile-nav {
+        display: block;
+      }
+
+      body {
+        padding-bottom: 70px;
+      }
+
+      .pricing-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .poster-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+
+      .sidebar {
+        width: 100%;
+        right: -100%;
+      }
+
+      .modal {
+        padding: 24px;
+      }
+
+      .hero {
+        min-height: 70vh;
+        padding: 60px 20px 40px;
+      }
+
+      h1 {
+        font-size: 2.2rem;
+      }
+
+      .bundle-summary {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .float-ig {
+        bottom: 80px;
+      }
+
+      .recent-popup {
+        bottom: 80px;
+      }
+
+      .cat-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 400px) {
+      .poster-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .cat-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<!-- ── Header ──────────────────────────────────────────────────────────────── -->
-<header>
-  <div class="header-inner">
-    <a href="/" class="logo">Poster<span>Haus</span></a>
-    <nav>
-      <a href="#hero">Home</a>
-      <a href="#shop">Shop</a>
-      <a href="#bundle">Bundle</a>
-      <a href="#custom">Custom</a>
-    </nav>
-    <div style="display:flex;align-items:center;gap:12px;">
-      <button class="cart-btn" onclick="openCart()">
-        🛒 Cart <span class="cart-count" id="cart-count">0</span>
-      </button>
-      <button class="nav-hamburger" onclick="openCart()">☰</button>
-    </div>
-  </div>
-</header>
-
-<!-- ── Hero ─────────────────────────────────────────────────────────────────── -->
-<section class="hero" id="hero">
-  <div class="hero-posters" id="hero-posters"></div>
-  <div class="hero-content">
-    <div class="hero-badge">A4 · 300 GSM Matte · Starting at ₹49</div>
-    <h1>Your Style on <em>Every Wall.</em></h1>
-    <p>Premium poster prints delivered on campus. Anime, gaming, movies, music & more. Bundle deals starting at ₹79.</p>
-    <div class="hero-actions">
-      <button class="btn-primary" onclick="scrollTo('#shop')">Shop Posters</button>
-      <a href="#custom" class="btn-outline">Create Your Own →</a>
-    </div>
-  </div>
-</section>
-
-<!-- ── Pricing Banner ──────────────────────────────────────────────────────── -->
-<section class="pricing-banner section">
-  <div class="container">
-    <div class="section-title">
-      <h2>🎓 Student Pricing</h2>
-      <p>No minimum order. Bundle & save.</p>
-    </div>
-    <div class="pricing-grid">
-      <div class="price-card">
-        <div class="amount">₹49</div>
-        <div class="label">1 Poster</div>
-      </div>
-      <div class="price-card">
-        <div class="amount">₹79</div>
-        <div class="label">2 Posters</div>
-      </div>
-      <div class="price-card featured">
-        <div class="price-badge">BEST VALUE</div>
-        <div class="amount">₹99</div>
-        <div class="label">3 Posters</div>
-      </div>
-      <div class="price-card">
-        <div class="amount">₹59</div>
-        <div class="label">Custom Print</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── Featured Categories ─────────────────────────────────────────────────── -->
-<section class="section">
-  <div class="container">
-    <div class="section-title">
-      <h2>Browse Categories</h2>
-      <p>Find your vibe.</p>
-    </div>
-    <div class="cat-grid" id="cat-grid"></div>
-  </div>
-</section>
-
-<!-- ── Shop ─────────────────────────────────────────────────────────────────── -->
-<section class="section" id="shop">
-  <div class="container">
-    <h2>Shop All Posters</h2>
-    <p style="color:var(--muted);margin-bottom:24px;">Tap to preview. Click + Add to build your bundle.</p>
-
-    <div class="toolbar">
-      <input type="text" class="search-input" id="search"
-        placeholder="Search posters by name, category, or tag..." oninput="filterPosters()">
-      <select class="sort-select" id="sort-select" onchange="filterPosters()">
-        <option value="default">Sort: Default</option>
-        <option value="az">A → Z</option>
-        <option value="za">Z → A</option>
-        <option value="price-asc">Price ↑</option>
-        <option value="price-desc">Price ↓</option>
-      </select>
-      <span class="count-badge" id="count-badge">— posters</span>
-    </div>
-
-    <div class="filter-pills" id="filter-pills"></div>
-    <div class="poster-grid" id="poster-grid">
-      <div style="text-align:center;padding:80px 0;color:var(--muted);grid-column:1/-1;">
-        <div class="skeleton" style="width:32px;height:32px;border-radius:50%;margin:0 auto 12px;"></div>
-        Loading posters...
-      </div>
-    </div>
-    <div class="load-more-wrap" id="load-more-wrap" style="display:none;">
-      <button class="load-more-btn" id="load-more-btn" onclick="showMorePosters()">Load More Posters</button>
-    </div>
-  </div>
-</section>
-
-<!-- ── Bundle Builder ──────────────────────────────────────────────────────── -->
-<section class="bundle-section section" id="bundle">
-  <div class="container">
-    <div class="section-title">
-      <h2>🎯 Your Bundle</h2>
-      <p>Add standard posters above. Bundle pricing applied automatically.</p>
-    </div>
-    <div class="bundle-summary" id="bundle-summary">
-      <div class="bundle-info">
-        <h3 id="bundle-count">0 posters selected</h3>
-        <div class="bundle-savings" id="bundle-savings"></div>
-      </div>
-      <div>
-        <div class="bundle-total" id="bundle-total">₹0</div>
-        <button class="btn-primary" style="margin-top:8px;" onclick="openCheckout()" id="bundle-checkout-btn" disabled>
-          Checkout →
+  <!-- ── Header ──────────────────────────────────────────────────────────────── -->
+  <header>
+    <div class="header-inner">
+      <a href="/" class="logo">Poster<span>Haus</span></a>
+      <nav>
+        <a href="#hero">Home</a>
+        <a href="#shop">Shop</a>
+        <a href="#bundle">Bundle</a>
+        <a href="#custom">Custom</a>
+      </nav>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="cart-btn" onclick="openCart()">
+          🛒 Cart <span class="cart-count" id="cart-count">0</span>
         </button>
+        <button class="nav-hamburger" onclick="openCart()">☰</button>
       </div>
     </div>
+  </header>
 
-    <div class="bulk-cta">
-      <p>🏫 <strong>Bulk / Club Orders?</strong> DM us on Instagram → <a href="#" id="bulk-ig-link" target="_blank">@posterhaus.in</a></p>
+  <!-- ── Hero ─────────────────────────────────────────────────────────────────── -->
+  <section class="hero" id="hero">
+    <div class="hero-posters" id="hero-posters"></div>
+    <div class="hero-content">
+      <div class="hero-badge">A4 · 300 GSM Matte · Starting at ₹49</div>
+      <h1>Your Style on <em>Every Wall.</em></h1>
+      <p>Premium poster prints delivered on campus. Anime, gaming, movies, music & more. Bundle deals starting at ₹79.
+      </p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="scrollTo('#shop')">Shop Posters</button>
+        <a href="#custom" class="btn-outline">Create Your Own →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Pricing Banner ──────────────────────────────────────────────────────── -->
+  <section class="pricing-banner section">
+    <div class="container">
+      <div class="section-title">
+        <h2>🎓 Student Pricing</h2>
+        <p>No minimum order. Bundle & save.</p>
+      </div>
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="amount">₹49</div>
+          <div class="label">1 Poster</div>
+        </div>
+        <div class="price-card">
+          <div class="amount">₹79</div>
+          <div class="label">2 Posters</div>
+        </div>
+        <div class="price-card featured">
+          <div class="price-badge">BEST VALUE</div>
+          <div class="amount">₹99</div>
+          <div class="label">3 Posters</div>
+        </div>
+        <div class="price-card">
+          <div class="amount">₹59</div>
+          <div class="label">Custom Print</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Featured Categories ─────────────────────────────────────────────────── -->
+  <section class="section">
+    <div class="container">
+      <div class="section-title">
+        <h2>Browse Categories</h2>
+        <p>Find your vibe.</p>
+      </div>
+      <div class="cat-grid" id="cat-grid"></div>
+    </div>
+  </section>
+
+  <!-- ── Shop ─────────────────────────────────────────────────────────────────── -->
+  <section class="section" id="shop">
+    <div class="container">
+      <h2>Shop All Posters</h2>
+      <p style="color:var(--muted);margin-bottom:24px;">Tap to preview. Click + Add to build your bundle.</p>
+
+      <div class="toolbar">
+        <input type="text" class="search-input" id="search" placeholder="Search posters by name, category, or tag..."
+          oninput="filterPosters()">
+        <select class="sort-select" id="sort-select" onchange="filterPosters()">
+          <option value="default">Sort: Default</option>
+          <option value="az">A → Z</option>
+          <option value="za">Z → A</option>
+          <option value="price-asc">Price ↑</option>
+          <option value="price-desc">Price ↓</option>
+        </select>
+        <span class="count-badge" id="count-badge">— posters</span>
+      </div>
+
+      <div class="filter-pills" id="filter-pills"></div>
+      <div class="poster-grid" id="poster-grid">
+        <div style="text-align:center;padding:80px 0;color:var(--muted);grid-column:1/-1;">
+          <div class="skeleton" style="width:32px;height:32px;border-radius:50%;margin:0 auto 12px;"></div>
+          Loading posters...
+        </div>
+      </div>
+      <div class="load-more-wrap" id="load-more-wrap" style="display:none;">
+        <button class="load-more-btn" id="load-more-btn" onclick="showMorePosters()">Load More Posters</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Bundle Builder ──────────────────────────────────────────────────────── -->
+  <section class="bundle-section section" id="bundle">
+    <div class="container">
+      <div class="section-title">
+        <h2>🎯 Your Bundle</h2>
+        <p>Add standard posters above. Bundle pricing applied automatically.</p>
+      </div>
+      <div class="bundle-summary" id="bundle-summary">
+        <div class="bundle-info">
+          <h3 id="bundle-count">0 posters selected</h3>
+          <div class="bundle-savings" id="bundle-savings"></div>
+        </div>
+        <div>
+          <div class="bundle-total" id="bundle-total">₹0</div>
+          <button class="btn-primary" style="margin-top:8px;" onclick="openCheckout()" id="bundle-checkout-btn"
+            disabled>
+            Checkout →
+          </button>
+        </div>
+      </div>
+
+      <div class="bulk-cta">
+        <p>🏫 <strong>Bulk / Club Orders?</strong> DM us on Instagram → <a href="#" id="bulk-ig-link"
+            target="_blank">@posterhaus.in</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Custom Print ────────────────────────────────────────────────────────── -->
+  <section class="section" id="custom">
+    <div class="container" style="max-width:600px;">
+      <div class="section-title">
+        <h2>🎨 Print Your Own Design</h2>
+        <p>Upload any image — ₹59 per print. Ready in 3–4 days.</p>
+      </div>
+      <div class="upload-zone" id="upload-zone" onclick="document.getElementById('upload-input').click()">
+        <div class="icon">📸</div>
+        <div
+          style="font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--gold);margin-bottom:4px;">
+          Upload Your Image</div>
+        <div style="font-size:11px;color:var(--muted);">JPG, PNG, WebP, PDF · Max 10 MB</div>
+      </div>
+      <input type="file" id="upload-input" style="display:none" accept="image/*,.pdf"
+        onchange="handleCustomUpload(this)">
+      <div class="upload-preview" id="upload-preview">
+        <img id="upload-preview-img" src="" alt="Preview">
+        <p style="margin-top:8px;font-size:12px;">Custom Print · <strong>₹59</strong> · Ready in 3–4 days</p>
+        <button class="btn-primary" style="margin-top:12px;" onclick="submitCustomUpload()">+ Add to Cart</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Cart Sidebar ────────────────────────────────────────────────────────── -->
+  <div class="overlay" id="overlay" onclick="closeCart()"></div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="sidebar-title">Your Cart</span>
+      <button class="close-btn" onclick="closeCart()">✕</button>
+    </div>
+    <div class="sidebar-body" id="cart-body"></div>
+    <div class="sidebar-footer">
+      <div class="cart-savings" id="cart-savings" style="display:none;"></div>
+      <div class="total-row">
+        <span class="total-label">TOTAL</span>
+        <span class="total-amount" id="cart-total">₹0</span>
+      </div>
+      <button class="checkout-btn" id="checkout-btn" onclick="openCheckout()" disabled>
+        Checkout →
+      </button>
     </div>
   </div>
-</section>
 
-<!-- ── Custom Print ────────────────────────────────────────────────────────── -->
-<section class="section" id="custom">
-  <div class="container" style="max-width:600px;">
-    <div class="section-title">
-      <h2>🎨 Print Your Own Design</h2>
-      <p>Upload any image — ₹59 per print. Ready in 3–4 days.</p>
+  <!-- ── Checkout Modal ──────────────────────────────────────────────────────── -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal-content"></div>
+  </div>
+
+  <!-- ── Recently Purchased Popup ────────────────────────────────────────────── -->
+  <div class="recent-popup" id="recent-popup">
+    <div class="dot"></div>
+    <div class="msg" id="recent-msg"></div>
+    <button class="close-popup" onclick="dismissRecent()">✕</button>
+  </div>
+
+  <!-- ── Floating Instagram ──────────────────────────────────────────────────── -->
+  <a class="float-ig" id="float-ig" href="#" target="_blank" title="Follow us on Instagram">
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+    </svg>
+  </a>
+
+  <!-- ── Footer ──────────────────────────────────────────────────────────────── -->
+  <footer>
+    <div class="logo">Poster<span>Haus</span></div>
+    <p>A4 · 300 GSM Matte · On Campus Delivery</p>
+    <div class="links">
+      <a href="#shop">Shop</a>
+      <a href="#custom">Custom Print</a>
+      <a href="#bundle">Bundle</a>
+      <a href="#" id="footer-ig-link">Instagram</a>
     </div>
-    <div class="upload-zone" id="upload-zone" onclick="document.getElementById('upload-input').click()">
-      <div class="icon">📸</div>
-      <div style="font-family:'Poppins',sans-serif;font-size:16px;font-weight:600;color:var(--gold);margin-bottom:4px;">Upload Your Image</div>
-      <div style="font-size:12px;color:var(--muted);">JPG, PNG, WebP, PDF · Max 10 MB</div>
+    <p style="margin-top:16px;">🏫 Bulk / Club Orders? <a href="#" id="footer-bulk-link"
+        style="color:var(--gold);text-decoration:none;">DM us on Instagram →</a></p>
+    <p style="margin-top:12px;font-size:10px;color:var(--muted);">© 2025 PosterHaus. All rights reserved.</p>
+  </footer>
+
+  <!-- ── Mobile Bottom Nav ───────────────────────────────────────────────────── -->
+  <div class="mobile-nav">
+    <div class="mobile-nav-inner">
+      <a href="#hero" class="active"><span class="icon">🏠</span>Home</a>
+      <a href="#shop"><span class="icon">🛍️</span>Shop</a>
+      <a href="#bundle"><span class="icon">📦</span>Bundle</a>
+      <a href="#custom"><span class="icon">🎨</span>Custom</a>
+      <a href="javascript:void(0)" onclick="openCart()"><span class="icon">🛒</span>Cart</a>
     </div>
-    <input type="file" id="upload-input" style="display:none" accept="image/*,.pdf" onchange="handleCustomUpload(this)">
-    <div class="upload-preview" id="upload-preview">
-      <img id="upload-preview-img" src="" alt="Preview">
-      <p style="margin-top:8px;font-size:13px;">Custom Print · <strong>₹59</strong> · Ready in 3–4 days</p>
-      <button class="btn-primary" style="margin-top:12px;" onclick="submitCustomUpload()">+ Add to Cart</button>
-    </div>
   </div>
-</section>
 
-<!-- ── Cart Sidebar ────────────────────────────────────────────────────────── -->
-<div class="overlay" id="overlay" onclick="closeCart()"></div>
-<div class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <span class="sidebar-title">Your Cart</span>
-    <button class="close-btn" onclick="closeCart()">✕</button>
-  </div>
-  <div class="sidebar-body" id="cart-body"></div>
-  <div class="sidebar-footer">
-    <div class="cart-savings" id="cart-savings" style="display:none;"></div>
-    <div class="total-row">
-      <span class="total-label">TOTAL</span>
-      <span class="total-amount" id="cart-total">₹0</span>
-    </div>
-    <button class="checkout-btn" id="checkout-btn" onclick="openCheckout()" disabled>
-      Checkout →
-    </button>
-  </div>
-</div>
+  <script>
+    // ── Constants ─────────────────────────────────────────────────────────────────
+    const STANDARD_PRICE = 49;
+    const CUSTOM_PRICE = 59;
+    const INSTAGRAM_HANDLE = 'posterhaus.in'; // ← update with your real handle
+    const UPI_ID = '8709533015-3@ybl';
+    const SHOP_NAME = 'PosterHaus';
+    const CATEGORIES = [
+      { name: 'Anime', emoji: '🎌' },
+      { name: 'Cars', emoji: '🚗' },
+      { name: 'Gaming', emoji: '🎮' },
+      { name: 'Movies', emoji: '🎬' },
+      { name: 'Music', emoji: '🎵' },
+      { name: 'Quotes', emoji: '💬' },
+      { name: 'Minimalist', emoji: '◻️' },
+      { name: 'Sports', emoji: '⚽' },
+      { name: 'Aesthetic', emoji: '🌸' },
+      { name: 'Memes', emoji: '😂' },
+    ];
+    const PAGE_SIZE = 50;
 
-<!-- ── Checkout Modal ──────────────────────────────────────────────────────── -->
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal" id="modal-content"></div>
-</div>
+    let allPosters = [];
+    let filteredPosters = [];
+    let visibleCount = PAGE_SIZE;
+    let cart = new Map();
+    let activeCategory = 'All';
+    let pendingCustomFile = null;
 
-<!-- ── Recently Purchased Popup ────────────────────────────────────────────── -->
-<div class="recent-popup" id="recent-popup">
-  <div class="dot"></div>
-  <div class="msg" id="recent-msg"></div>
-  <button class="close-popup" onclick="dismissRecent()">✕</button>
-</div>
+    // ── Bundle Pricing ────────────────────────────────────────────────────────────
+    function calcBundlePrice(standardQty) {
+      const threes = Math.floor(standardQty / 3);
+      const rem = standardQty % 3;
+      const twos = Math.floor(rem / 2);
+      const ones = rem % 2;
+      return threes * 99 + twos * 79 + ones * 49;
+    }
 
-<!-- ── Floating Instagram ──────────────────────────────────────────────────── -->
-<a class="float-ig" id="float-ig" href="#" target="_blank" title="Follow us on Instagram">
-  <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-</a>
+    // ── Init ──────────────────────────────────────────────────────────────────────
+    function init() {
+      // Set Instagram links
+      const igUrl = `https://instagram.com/${INSTAGRAM_HANDLE}`;
+      document.getElementById('float-ig').href = igUrl;
+      document.getElementById('footer-ig-link').href = igUrl;
+      document.getElementById('footer-bulk-link').href = igUrl;
+      document.getElementById('bulk-ig-link').href = igUrl;
+      document.getElementById('bulk-ig-link').textContent = `@${INSTAGRAM_HANDLE}`;
 
-<!-- ── Footer ──────────────────────────────────────────────────────────────── -->
-<footer>
-  <div class="logo">Poster<span>Haus</span></div>
-  <p>A4 · 300 GSM Matte · On Campus Delivery</p>
-  <div class="links">
-    <a href="#shop">Shop</a>
-    <a href="#custom">Custom Print</a>
-    <a href="#bundle">Bundle</a>
-    <a href="#" id="footer-ig-link">Instagram</a>
-  </div>
-  <p style="margin-top:16px;">🏫 Bulk / Club Orders? <a href="#" id="footer-bulk-link" style="color:var(--accent);text-decoration:none;">DM us on Instagram →</a></p>
-  <p style="margin-top:12px;font-size:11px;color:var(--border);">© 2025 PosterHaus. All rights reserved.</p>
-</footer>
+      // Render category pills + grid
+      renderCategoryGrid();
+      renderFilterPills();
 
-<!-- ── Mobile Bottom Nav ───────────────────────────────────────────────────── -->
-<div class="mobile-nav">
-  <div class="mobile-nav-inner">
-    <a href="#hero" class="active"><span class="icon">🏠</span>Home</a>
-    <a href="#shop"><span class="icon">🛍️</span>Shop</a>
-    <a href="#bundle"><span class="icon">📦</span>Bundle</a>
-    <a href="#custom"><span class="icon">🎨</span>Custom</a>
-    <a href="javascript:void(0)" onclick="openCart()"><span class="icon">🛒</span>Cart</a>
-  </div>
-</div>
+      // Load posters
+      loadPosters();
 
-<script>
-// ── Constants ─────────────────────────────────────────────────────────────────
-const STANDARD_PRICE   = 49;
-const CUSTOM_PRICE     = 59;
-const INSTAGRAM_HANDLE = 'posterhaus.in'; // ← update with your real handle
-const UPI_ID           = '8709533015-3@ybl';
-const SHOP_NAME        = 'PosterHaus';
-const CATEGORIES = [
-  { name: 'Anime',      emoji: '🎌' },
-  { name: 'Cars',       emoji: '🚗' },
-  { name: 'Gaming',     emoji: '🎮' },
-  { name: 'Movies',     emoji: '🎬' },
-  { name: 'Music',      emoji: '🎵' },
-  { name: 'Quotes',     emoji: '💬' },
-  { name: 'Minimalist', emoji: '◻️' },
-  { name: 'Sports',     emoji: '⚽' },
-  { name: 'Aesthetic',  emoji: '🌸' },
-  { name: 'Memes',      emoji: '😂' },
-];
-const PAGE_SIZE = 50;
+      // Start recently purchased popup
+      setTimeout(startRecentPopup, 5000);
+    }
 
-let allPosters = [];
-let filteredPosters = [];
-let visibleCount = PAGE_SIZE;
-let cart = new Map();
-let activeCategory = 'All';
-let pendingCustomFile = null;
-
-// ── Bundle Pricing ────────────────────────────────────────────────────────────
-function calcBundlePrice(standardQty) {
-  const threes = Math.floor(standardQty / 3);
-  const rem    = standardQty % 3;
-  const twos   = Math.floor(rem / 2);
-  const ones   = rem % 2;
-  return threes * 99 + twos * 79 + ones * 49;
-}
-
-// ── Init ──────────────────────────────────────────────────────────────────────
-function init() {
-  // Set Instagram links
-  const igUrl = `https://instagram.com/${INSTAGRAM_HANDLE}`;
-  document.getElementById('float-ig').href = igUrl;
-  document.getElementById('footer-ig-link').href = igUrl;
-  document.getElementById('footer-bulk-link').href = igUrl;
-  document.getElementById('bulk-ig-link').href = igUrl;
-  document.getElementById('bulk-ig-link').textContent = `@${INSTAGRAM_HANDLE}`;
-
-  // Render category pills + grid
-  renderCategoryGrid();
-  renderFilterPills();
-
-  // Load posters
-  loadPosters();
-
-  // Start recently purchased popup
-  setTimeout(startRecentPopup, 5000);
-}
-
-// ── Category Grid ─────────────────────────────────────────────────────────────
-function renderCategoryGrid() {
-  document.getElementById('cat-grid').innerHTML = CATEGORIES.map(c => `
+    // ── Category Grid ─────────────────────────────────────────────────────────────
+    function renderCategoryGrid() {
+      document.getElementById('cat-grid').innerHTML = CATEGORIES.map(c => `
     <div class="cat-card" onclick="selectCategory('${c.name}')">
       <div class="emoji">${c.emoji}</div>
       <div class="name">${c.name}</div>
     </div>
   `).join('');
-}
+    }
 
-function renderFilterPills() {
-  const pills = document.getElementById('filter-pills');
-  pills.innerHTML = `<button class="pill ${activeCategory === 'All' ? 'active' : ''}" onclick="selectCategory('All')">All</button>` +
-    CATEGORIES.map(c => `<button class="pill ${activeCategory === c.name ? 'active' : ''}" onclick="selectCategory('${c.name}')">${c.emoji} ${c.name}</button>`).join('');
-}
+    function renderFilterPills() {
+      const pills = document.getElementById('filter-pills');
+      pills.innerHTML = `<button class="pill ${activeCategory === 'All' ? 'active' : ''}" onclick="selectCategory('All')">All</button>` +
+        CATEGORIES.map(c => `<button class="pill ${activeCategory === c.name ? 'active' : ''}" onclick="selectCategory('${c.name}')">${c.emoji} ${c.name}</button>`).join('');
+    }
 
-function selectCategory(cat) {
-  activeCategory = cat;
-  renderFilterPills();
-  filterPosters();
-  document.getElementById('shop').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+    function selectCategory(cat) {
+      activeCategory = cat;
+      renderFilterPills();
+      filterPosters();
+      document.getElementById('shop').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-// ── Load Posters ──────────────────────────────────────────────────────────────
-async function loadPosters() {
-  try {
-    const res = await fetch('/api/posters');
-    allPosters = await res.json();
-    filterPosters();
-    renderHeroPosters();
-  } catch {
-    document.getElementById('poster-grid').innerHTML =
-      '<div style="text-align:center;padding:60px 0;color:var(--muted);grid-column:1/-1;">⚠️ Could not load posters. Please refresh and try again.</div>';
-  }
-}
+    // ── Load Posters ──────────────────────────────────────────────────────────────
+    async function loadPosters() {
+      try {
+        const res = await fetch('/api/posters');
+        allPosters = await res.json();
+        filterPosters();
+        renderHeroPosters();
+      } catch {
+        document.getElementById('poster-grid').innerHTML =
+          '<div style="text-align:center;padding:60px 0;color:var(--muted);grid-column:1/-1;">⚠️ Could not load posters. Please refresh and try again.</div>';
+      }
+    }
 
-function renderHeroPosters() {
-  const container = document.getElementById('hero-posters');
-  const available = allPosters.filter(p => p.status === 'available').slice(0, 3);
-  container.innerHTML = available.map((p, i) => `
+    function renderHeroPosters() {
+      const container = document.getElementById('hero-posters');
+      const available = allPosters.filter(p => p.status === 'available').slice(0, 3);
+      container.innerHTML = available.map((p, i) => `
     <img class="hero-poster-float" src="/posters/${encodeURIComponent(p.file)}" alt=""
       style="--rot:${[-8, 6, 10][i]}deg" loading="lazy">
   `).join('');
-}
+    }
 
-// ── Filter + Sort ─────────────────────────────────────────────────────────────
-function filterPosters() {
-  const q = document.getElementById('search').value.toLowerCase();
-  const sort = document.getElementById('sort-select').value;
+    // ── Filter + Sort ─────────────────────────────────────────────────────────────
+    function filterPosters() {
+      const q = document.getElementById('search').value.toLowerCase();
+      const sort = document.getElementById('sort-select').value;
 
-  filteredPosters = allPosters.filter(p => {
-    const matchesCat = activeCategory === 'All' || (p.category || 'General') === activeCategory;
-    const matchesSearch = !q ||
-      p.name.toLowerCase().includes(q) ||
-      p.id.toLowerCase().includes(q) ||
-      (p.category || '').toLowerCase().includes(q) ||
-      (p.tags || []).some(t => t.toLowerCase().includes(q));
-    return matchesCat && matchesSearch;
-  });
+      filteredPosters = allPosters.filter(p => {
+        const matchesCat = activeCategory === 'All' || (p.category || 'General') === activeCategory;
+        const matchesSearch = !q ||
+          p.name.toLowerCase().includes(q) ||
+          p.id.toLowerCase().includes(q) ||
+          (p.category || '').toLowerCase().includes(q) ||
+          (p.tags || []).some(t => t.toLowerCase().includes(q));
+        return matchesCat && matchesSearch;
+      });
 
-  // Sort
-  switch (sort) {
-    case 'az':         filteredPosters.sort((a, b) => a.name.localeCompare(b.name)); break;
-    case 'za':         filteredPosters.sort((a, b) => b.name.localeCompare(a.name)); break;
-    case 'price-asc':  filteredPosters.sort((a, b) => (a.price || 49) - (b.price || 49)); break;
-    case 'price-desc': filteredPosters.sort((a, b) => (b.price || 49) - (a.price || 49)); break;
-  }
+      // Sort
+      switch (sort) {
+        case 'az': filteredPosters.sort((a, b) => a.name.localeCompare(b.name)); break;
+        case 'za': filteredPosters.sort((a, b) => b.name.localeCompare(a.name)); break;
+        case 'price-asc': filteredPosters.sort((a, b) => (a.price || 49) - (b.price || 49)); break;
+        case 'price-desc': filteredPosters.sort((a, b) => (b.price || 49) - (a.price || 49)); break;
+      }
 
-  visibleCount = PAGE_SIZE;
-  renderGrid();
-}
+      visibleCount = PAGE_SIZE;
+      renderGrid();
+    }
 
-function renderGrid() {
-  const grid = document.getElementById('poster-grid');
-  const visible = filteredPosters.slice(0, visibleCount);
+    function renderGrid() {
+      const grid = document.getElementById('poster-grid');
+      const visible = filteredPosters.slice(0, visibleCount);
 
-  document.getElementById('count-badge').textContent = `${filteredPosters.length} poster${filteredPosters.length !== 1 ? 's' : ''}`;
+      document.getElementById('count-badge').textContent = `${filteredPosters.length} poster${filteredPosters.length !== 1 ? 's' : ''}`;
 
-  if (!filteredPosters.length) {
-    grid.innerHTML = '<div style="text-align:center;padding:60px 0;color:var(--muted);grid-column:1/-1;">No posters found. Try a different search or category.</div>';
-    document.getElementById('load-more-wrap').style.display = 'none';
-    return;
-  }
+      if (!filteredPosters.length) {
+        grid.innerHTML = '<div style="text-align:center;padding:60px 0;color:var(--muted);grid-column:1/-1;">No posters found. Try a different search or category.</div>';
+        document.getElementById('load-more-wrap').style.display = 'none';
+        return;
+      }
 
-  grid.innerHTML = visible.map(p => {
-    const inCart = cart.has(p.id);
-    const isReserved = p.status === 'reserved';
-    const catBadge = p.category && p.category !== 'General' ? `<span class="card-badge badge-cat">${p.category}</span>` : '';
-    const tagBadge = (p.tags || []).includes('bestseller') ? '<span class="card-badge badge-best" style="left:auto;right:8px;">🔥 Best Seller</span>' :
-                     (p.tags || []).includes('new') ? '<span class="card-badge badge-new" style="left:auto;right:8px;">✨ New</span>' : '';
+      grid.innerHTML = visible.map(p => {
+        const inCart = cart.has(p.id);
+        const isReserved = p.status === 'reserved';
+        const catBadge = p.category && p.category !== 'General' ? `<span class="card-badge badge-cat">${p.category}</span>` : '';
+        const tagBadge = (p.tags || []).includes('bestseller') ? '<span class="card-badge badge-best" style="left:auto;right:8px;">🔥 Best Seller</span>' :
+          (p.tags || []).includes('new') ? '<span class="card-badge badge-new" style="left:auto;right:8px;">✨ New</span>' : '';
 
-    return `
+        return `
       <div class="card ${inCart ? 'selected' : ''} ${isReserved ? 'reserved' : ''}" id="card-${p.id}">
         <div class="card-select">✓</div>
         ${isReserved ? '<div class="reserved-badge">RESERVED</div>' : ''}
@@ -719,117 +1872,117 @@ function renderGrid() {
         </div>
       </div>
     `;
-  }).join('');
+      }).join('');
 
-  // Load More
-  const hasMore = visibleCount < filteredPosters.length;
-  document.getElementById('load-more-wrap').style.display = hasMore ? 'block' : 'none';
-  if (hasMore) {
-    document.getElementById('load-more-btn').textContent = `Load More (${filteredPosters.length - visibleCount} remaining)`;
-  }
-}
-
-function showMorePosters() {
-  visibleCount += PAGE_SIZE;
-  renderGrid();
-}
-
-// ── Poster Actions ────────────────────────────────────────────────────────────
-function togglePoster(id) {
-  const p = allPosters.find(x => x.id === id);
-  if (!p || p.status === 'reserved') return;
-  if (cart.has(id)) cart.delete(id);
-  else cart.set(id, { ...p, isCustom: false, price: STANDARD_PRICE });
-  updateCartUI();
-  renderGrid();
-  updateBundleUI();
-}
-
-// ── Custom Upload ─────────────────────────────────────────────────────────────
-function handleCustomUpload(input) {
-  if (!input.files || !input.files[0]) return;
-  const file = input.files[0];
-
-  // 10 MB limit
-  if (file.size > 10 * 1024 * 1024) {
-    alert('File too large. Maximum size is 10 MB.');
-    input.value = '';
-    return;
-  }
-
-  pendingCustomFile = file;
-  const preview = document.getElementById('upload-preview');
-  const previewImg = document.getElementById('upload-preview-img');
-
-  if (file.type.startsWith('image/')) {
-    const reader = new FileReader();
-    reader.onload = e => { previewImg.src = e.target.result; };
-    reader.readAsDataURL(file);
-    previewImg.style.display = 'block';
-  } else {
-    previewImg.style.display = 'none';
-  }
-
-  preview.style.display = 'block';
-  document.getElementById('upload-zone').style.display = 'none';
-}
-
-async function submitCustomUpload() {
-  if (!pendingCustomFile) return;
-  const formData = new FormData();
-  formData.append('image', pendingCustomFile);
-
-  try {
-    const res  = await fetch('/api/upload', { method: 'POST', body: formData });
-    const data = await res.json();
-    if (data.success) {
-      cart.set(data.poster.id, data.poster);
-      updateCartUI();
-      updateBundleUI();
-      openCart();
-      // Reset
-      pendingCustomFile = null;
-      document.getElementById('upload-preview').style.display = 'none';
-      document.getElementById('upload-zone').style.display = 'block';
-      document.getElementById('upload-input').value = '';
+      // Load More
+      const hasMore = visibleCount < filteredPosters.length;
+      document.getElementById('load-more-wrap').style.display = hasMore ? 'block' : 'none';
+      if (hasMore) {
+        document.getElementById('load-more-btn').textContent = `Load More (${filteredPosters.length - visibleCount} remaining)`;
+      }
     }
-  } catch { alert('Upload failed. Please check your connection.'); }
-}
 
-// ── Cart ──────────────────────────────────────────────────────────────────────
-function updateCartUI() {
-  const items = Array.from(cart.values());
-  const standardItems = items.filter(i => !i.isCustom);
-  const customItems   = items.filter(i => i.isCustom);
+    function showMorePosters() {
+      visibleCount += PAGE_SIZE;
+      renderGrid();
+    }
 
-  const bundleTotal    = calcBundlePrice(standardItems.length);
-  const individualTotal = standardItems.length * STANDARD_PRICE;
-  const customTotal    = customItems.length * CUSTOM_PRICE;
-  const total          = bundleTotal + customTotal;
-  const savings        = individualTotal - bundleTotal;
+    // ── Poster Actions ────────────────────────────────────────────────────────────
+    function togglePoster(id) {
+      const p = allPosters.find(x => x.id === id);
+      if (!p || p.status === 'reserved') return;
+      if (cart.has(id)) cart.delete(id);
+      else cart.set(id, { ...p, isCustom: false, price: STANDARD_PRICE });
+      updateCartUI();
+      renderGrid();
+      updateBundleUI();
+    }
 
-  document.getElementById('cart-count').textContent = cart.size;
-  document.getElementById('cart-total').textContent = `₹${total}`;
-  document.getElementById('checkout-btn').disabled  = cart.size === 0;
+    // ── Custom Upload ─────────────────────────────────────────────────────────────
+    function handleCustomUpload(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
 
-  const savingsEl = document.getElementById('cart-savings');
-  if (savings > 0) {
-    savingsEl.textContent = `🎉 You save ₹${savings} with bundle pricing!`;
-    savingsEl.style.display = 'block';
-  } else {
-    savingsEl.style.display = 'none';
-  }
+      // 10 MB limit
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File too large. Maximum size is 10 MB.');
+        input.value = '';
+        return;
+      }
 
-  renderCartBody();
-}
+      pendingCustomFile = file;
+      const preview = document.getElementById('upload-preview');
+      const previewImg = document.getElementById('upload-preview-img');
 
-function renderCartBody() {
-  const body = document.getElementById('cart-body');
-  if (!cart.size) {
-    body.innerHTML = '<div class="cart-empty">Your cart is empty.<br>Tap a poster to add it.</div>';
-    return;
-  }
-  body.innerHTML = Array.from(cart.values()).map(p => `
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = e => { previewImg.src = e.target.result; };
+        reader.readAsDataURL(file);
+        previewImg.style.display = 'block';
+      } else {
+        previewImg.style.display = 'none';
+      }
+
+      preview.style.display = 'block';
+      document.getElementById('upload-zone').style.display = 'none';
+    }
+
+    async function submitCustomUpload() {
+      if (!pendingCustomFile) return;
+      const formData = new FormData();
+      formData.append('image', pendingCustomFile);
+
+      try {
+        const res = await fetch('/api/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (data.success) {
+          cart.set(data.poster.id, data.poster);
+          updateCartUI();
+          updateBundleUI();
+          openCart();
+          // Reset
+          pendingCustomFile = null;
+          document.getElementById('upload-preview').style.display = 'none';
+          document.getElementById('upload-zone').style.display = 'block';
+          document.getElementById('upload-input').value = '';
+        }
+      } catch { alert('Upload failed. Please check your connection.'); }
+    }
+
+    // ── Cart ──────────────────────────────────────────────────────────────────────
+    function updateCartUI() {
+      const items = Array.from(cart.values());
+      const standardItems = items.filter(i => !i.isCustom);
+      const customItems = items.filter(i => i.isCustom);
+
+      const bundleTotal = calcBundlePrice(standardItems.length);
+      const individualTotal = standardItems.length * STANDARD_PRICE;
+      const customTotal = customItems.length * CUSTOM_PRICE;
+      const total = bundleTotal + customTotal;
+      const savings = individualTotal - bundleTotal;
+
+      document.getElementById('cart-count').textContent = cart.size;
+      document.getElementById('cart-total').textContent = `₹${total}`;
+      document.getElementById('checkout-btn').disabled = cart.size === 0;
+
+      const savingsEl = document.getElementById('cart-savings');
+      if (savings > 0) {
+        savingsEl.textContent = `🎉 You save ₹${savings} with bundle pricing!`;
+        savingsEl.style.display = 'block';
+      } else {
+        savingsEl.style.display = 'none';
+      }
+
+      renderCartBody();
+    }
+
+    function renderCartBody() {
+      const body = document.getElementById('cart-body');
+      if (!cart.size) {
+        body.innerHTML = '<div class="cart-empty">Your cart is empty.<br>Tap a poster to add it.</div>';
+        return;
+      }
+      body.innerHTML = Array.from(cart.values()).map(p => `
     <div class="cart-item">
       <img class="cart-item-img"
         src="${p.isCustom ? '/P_wanted/' : '/posters/'}${encodeURIComponent(p.file)}"
@@ -842,56 +1995,56 @@ function renderCartBody() {
       <button class="remove-btn" onclick="removeItem('${p.id}')">✕</button>
     </div>
   `).join('');
-}
+    }
 
-function removeItem(id) {
-  cart.delete(id);
-  updateCartUI();
-  updateBundleUI();
-  renderGrid();
-}
+    function removeItem(id) {
+      cart.delete(id);
+      updateCartUI();
+      updateBundleUI();
+      renderGrid();
+    }
 
-function openCart()  { renderCartBody(); document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('open'); }
-function closeCart() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
+    function openCart() { renderCartBody(); document.getElementById('sidebar').classList.add('open'); document.getElementById('overlay').classList.add('open'); }
+    function closeCart() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('overlay').classList.remove('open'); }
 
-// ── Bundle UI ─────────────────────────────────────────────────────────────────
-function updateBundleUI() {
-  const items = Array.from(cart.values());
-  const standardItems = items.filter(i => !i.isCustom);
-  const customItems   = items.filter(i => i.isCustom);
+    // ── Bundle UI ─────────────────────────────────────────────────────────────────
+    function updateBundleUI() {
+      const items = Array.from(cart.values());
+      const standardItems = items.filter(i => !i.isCustom);
+      const customItems = items.filter(i => i.isCustom);
 
-  const bundleTotal     = calcBundlePrice(standardItems.length);
-  const individualTotal = standardItems.length * STANDARD_PRICE;
-  const customTotal     = customItems.length * CUSTOM_PRICE;
-  const total           = bundleTotal + customTotal;
-  const savings         = individualTotal - bundleTotal;
+      const bundleTotal = calcBundlePrice(standardItems.length);
+      const individualTotal = standardItems.length * STANDARD_PRICE;
+      const customTotal = customItems.length * CUSTOM_PRICE;
+      const total = bundleTotal + customTotal;
+      const savings = individualTotal - bundleTotal;
 
-  document.getElementById('bundle-count').textContent = `${items.length} poster${items.length !== 1 ? 's' : ''} selected`;
-  document.getElementById('bundle-total').textContent = `₹${total}`;
-  document.getElementById('bundle-checkout-btn').disabled = cart.size === 0;
+      document.getElementById('bundle-count').textContent = `${items.length} poster${items.length !== 1 ? 's' : ''} selected`;
+      document.getElementById('bundle-total').textContent = `₹${total}`;
+      document.getElementById('bundle-checkout-btn').disabled = cart.size === 0;
 
-  const savingsEl = document.getElementById('bundle-savings');
-  if (savings > 0) {
-    savingsEl.textContent = `🎉 You save ₹${savings}!`;
-  } else {
-    savingsEl.textContent = standardItems.length >= 2 ? 'Add more to unlock savings!' : '';
-  }
-}
+      const savingsEl = document.getElementById('bundle-savings');
+      if (savings > 0) {
+        savingsEl.textContent = `🎉 You save ₹${savings}!`;
+      } else {
+        savingsEl.textContent = standardItems.length >= 2 ? 'Add more to unlock savings!' : '';
+      }
+    }
 
-// ── Checkout ──────────────────────────────────────────────────────────────────
-function openCheckout() {
-  closeCart();
-  const items = Array.from(cart.values());
-  const standardItems = items.filter(i => !i.isCustom);
-  const customItems   = items.filter(i => i.isCustom);
-  const bundleTotal    = calcBundlePrice(standardItems.length);
-  const customTotal    = customItems.length * CUSTOM_PRICE;
-  const total          = bundleTotal + customTotal;
+    // ── Checkout ──────────────────────────────────────────────────────────────────
+    function openCheckout() {
+      closeCart();
+      const items = Array.from(cart.values());
+      const standardItems = items.filter(i => !i.isCustom);
+      const customItems = items.filter(i => i.isCustom);
+      const bundleTotal = calcBundlePrice(standardItems.length);
+      const customTotal = customItems.length * CUSTOM_PRICE;
+      const total = bundleTotal + customTotal;
 
-  const ids = items.map(i => i.id).join(', ');
-  const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(SHOP_NAME)}&am=${total}&cu=INR&tn=${encodeURIComponent('Poster: ' + ids)}`;
+      const ids = items.map(i => i.id).join(', ');
+      const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(SHOP_NAME)}&am=${total}&cu=INR&tn=${encodeURIComponent('Poster: ' + ids)}`;
 
-  document.getElementById('modal-content').innerHTML = `
+      document.getElementById('modal-content').innerHTML = `
     <div class="modal-title">Complete Payment</div>
     <div class="modal-sub">Scan QR or tap to pay via UPI · ${items.length} item${items.length > 1 ? 's' : ''} · ₹${total}</div>
     <div class="qr-section">
@@ -900,7 +2053,7 @@ function openCheckout() {
       <div class="qr-amount">₹${total}</div>
       <div class="qr-upi">${UPI_ID}</div>
       <div style="margin-top:12px;">
-        <a href="${upiLink}" style="font-size:12px;color:var(--accent);border:1px solid var(--accent);padding:8px 18px;border-radius:var(--radius);text-decoration:none;font-weight:500;">
+        <a href="${upiLink}" style="font-size:12px;color:var(--gold);border:1px solid var(--gold);padding:8px 18px;border-radius:var(--radius);text-decoration:none;font-weight:500;">
           Open UPI App →
         </a>
       </div>
@@ -932,42 +2085,42 @@ function openCheckout() {
       <button class="btn-secondary" onclick="closeModal()">Cancel</button>
       <button class="btn-primary" style="flex:1;" onclick="submitOrder()">Confirm Order →</button>
     </div>`;
-  document.getElementById('modal-overlay').classList.add('open');
-}
+      document.getElementById('modal-overlay').classList.add('open');
+    }
 
-async function submitOrder() {
-  const name    = document.getElementById('buyer-name').value.trim();
-  const phone   = document.getElementById('buyer-phone').value.trim();
-  const utr     = document.getElementById('utr-number').value.trim();
-  const hostel  = document.getElementById('buyer-hostel').value.trim();
-  const room    = document.getElementById('buyer-room').value.trim();
+    async function submitOrder() {
+      const name = document.getElementById('buyer-name').value.trim();
+      const phone = document.getElementById('buyer-phone').value.trim();
+      const utr = document.getElementById('utr-number').value.trim();
+      const hostel = document.getElementById('buyer-hostel').value.trim();
+      const room = document.getElementById('buyer-room').value.trim();
 
-  if (!name)  { alert('Please enter your name.'); return; }
-  if (!phone) { alert('Please enter your phone number.'); return; }
-  if (!utr)   { alert('Please enter the UTR / Transaction ID after paying.'); return; }
+      if (!name) { alert('Please enter your name.'); return; }
+      if (!phone) { alert('Please enter your phone number.'); return; }
+      if (!utr) { alert('Please enter the UTR / Transaction ID after paying.'); return; }
 
-  try {
-    const res = await fetch('/api/orders', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        items: Array.from(cart.values()),
-        buyerName: name,
-        buyerPhone: phone,
-        hostel,
-        roomNumber: room,
-        utrNumber: utr
-      })
-    });
-    const data = await res.json();
-    if (data.success) {
-      const hasCustom = Array.from(cart.values()).some(i => i.isCustom);
-      cart.clear();
-      updateCartUI();
-      updateBundleUI();
-      renderGrid();
+      try {
+        const res = await fetch('/api/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            items: Array.from(cart.values()),
+            buyerName: name,
+            buyerPhone: phone,
+            hostel,
+            roomNumber: room,
+            utrNumber: utr
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          const hasCustom = Array.from(cart.values()).some(i => i.isCustom);
+          cart.clear();
+          updateCartUI();
+          updateBundleUI();
+          renderGrid();
 
-      document.getElementById('modal-content').innerHTML = `
+          document.getElementById('modal-content').innerHTML = `
         <div class="success-card">
           <div class="success-icon">🎉</div>
           <div class="success-title">Order Placed!</div>
@@ -985,73 +2138,74 @@ async function submitOrder() {
           </div>
           <button class="btn-primary" style="margin-top:20px;width:100%;" onclick="closeModal()">Got it!</button>
         </div>`;
+        }
+      } catch { alert('Could not submit order. Please try again.'); }
     }
-  } catch { alert('Could not submit order. Please try again.'); }
-}
 
-function closeModal() {
-  document.getElementById('modal-overlay').classList.remove('open');
-}
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('open');
+    }
 
-// ── Recently Purchased Popup ──────────────────────────────────────────────────
-const RECENT_MESSAGES = [
-  'Someone just ordered 2 Anime Posters 🔥',
-  '3 Gaming Posters sold in the last hour',
-  'Someone added a Custom Print 🎨',
-  'A Music poster bundle just sold! 🎵',
-  '2 Movie posters ordered 🎬',
-  'Someone just bought 3 posters for ₹99 🎉',
-];
-let recentIdx = 0;
-let recentDismissed = false;
+    // ── Recently Purchased Popup ──────────────────────────────────────────────────
+    const RECENT_MESSAGES = [
+      'Someone just ordered 2 Anime Posters 🔥',
+      '3 Gaming Posters sold in the last hour',
+      'Someone added a Custom Print 🎨',
+      'A Music poster bundle just sold! 🎵',
+      '2 Movie posters ordered 🎬',
+      'Someone just bought 3 posters for ₹99 🎉',
+    ];
+    let recentIdx = 0;
+    let recentDismissed = false;
 
-function startRecentPopup() {
-  if (recentDismissed) return;
-  showRecentPopup();
-  setInterval(() => {
-    if (!recentDismissed) showRecentPopup();
-  }, 17000); // 12s visible + 5s gap
-}
+    function startRecentPopup() {
+      if (recentDismissed) return;
+      showRecentPopup();
+      setInterval(() => {
+        if (!recentDismissed) showRecentPopup();
+      }, 17000); // 12s visible + 5s gap
+    }
 
-function showRecentPopup() {
-  const popup = document.getElementById('recent-popup');
-  const msg   = document.getElementById('recent-msg');
-  msg.textContent = RECENT_MESSAGES[recentIdx % RECENT_MESSAGES.length];
-  recentIdx++;
-  popup.classList.add('show');
-  setTimeout(() => popup.classList.remove('show'), 5000);
-}
+    function showRecentPopup() {
+      const popup = document.getElementById('recent-popup');
+      const msg = document.getElementById('recent-msg');
+      msg.textContent = RECENT_MESSAGES[recentIdx % RECENT_MESSAGES.length];
+      recentIdx++;
+      popup.classList.add('show');
+      setTimeout(() => popup.classList.remove('show'), 5000);
+    }
 
-function dismissRecent() {
-  recentDismissed = true;
-  document.getElementById('recent-popup').classList.remove('show');
-}
+    function dismissRecent() {
+      recentDismissed = true;
+      document.getElementById('recent-popup').classList.remove('show');
+    }
 
-// ── Scroll helper ─────────────────────────────────────────────────────────────
-function scrollTo(selector) {
-  document.querySelector(selector).scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
+    // ── Scroll helper ─────────────────────────────────────────────────────────────
+    function scrollTo(selector) {
+      document.querySelector(selector).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 
-// ── Mobile nav active state ───────────────────────────────────────────────────
-if ('IntersectionObserver' in window) {
-  const sections = ['hero', 'shop', 'bundle', 'custom'];
-  const observer = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        document.querySelectorAll('.mobile-nav a').forEach(a => a.classList.remove('active'));
-        const link = document.querySelector(`.mobile-nav a[href="#${entry.target.id}"]`);
-        if (link) link.classList.add('active');
-      }
-    });
-  }, { threshold: 0.3 });
-  sections.forEach(id => {
-    const el = document.getElementById(id);
-    if (el) observer.observe(el);
-  });
-}
+    // ── Mobile nav active state ───────────────────────────────────────────────────
+    if ('IntersectionObserver' in window) {
+      const sections = ['hero', 'shop', 'bundle', 'custom'];
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            document.querySelectorAll('.mobile-nav a').forEach(a => a.classList.remove('active'));
+            const link = document.querySelector(`.mobile-nav a[href="#${entry.target.id}"]`);
+            if (link) link.classList.add('active');
+          }
+        });
+      }, { threshold: 0.3 });
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+      });
+    }
 
-// ── Start ─────────────────────────────────────────────────────────────────────
-init();
-</script>
+    // ── Start ─────────────────────────────────────────────────────────────────────
+    init();
+  </script>
 </body>
+
 </html>

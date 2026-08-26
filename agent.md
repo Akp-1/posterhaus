@@ -4,7 +4,7 @@
 
 PosterHaus is a **college poster e-commerce business system**. It is a hybrid monolith combining:
 
-- A **modern dark-themed storefront** (`public/index.html`) where students browse, filter by category/tags, build bundles, upload custom prints, and place orders via UPI.
+- A **modern minimalist storefront** (`public/index.html`) using Cormorant Garamond & DM Mono fonts on a warm paper background (`#f8f7f4`) where students browse, filter by category/tags, build bundles, upload custom prints, and place orders via UPI.
 - A **secure admin dashboard** (`public/admin.html`) featuring an 8-card financial overview, order verification, inventory classification tool, category uploads, and analytics.
 - A **Node.js + Express backend** (`server.js`) serving all API routes.
 - A **dual-database hybrid architecture**: MySQL (orders + audit logs) and MongoDB (poster metadata).

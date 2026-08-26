@@ -6,7 +6,7 @@ PosterHaus is a minimalist, high-performance e-commerce platform designed for se
 
 ## 🚀 Key Features
 
-- **Modern Dark Storefront**: Responsive UI built with Poppins & Inter fonts without heavy frameworks.
+- **Modern Minimalist Storefront**: Clean gallery UI with Cormorant Garamond serif headings & DM Mono typography, built without heavy frameworks.
 - **Dynamic Bundle Pricing**: Greedy bundle engine applied automatically (1 poster ₹49, 2 posters ₹79, 3 posters ₹99).
 - **Categorization & Filtering**: 10 curated categories (`Anime`, `Cars`, `Gaming`, `Movies`, `Music`, `Quotes`, `Minimalist`, `Sports`, `Aesthetic`, `Memes`) with search by name, category, or tags.
 - **Paginated Performance**: Loads 50 posters at a time for optimal bandwidth and fast page loads.
