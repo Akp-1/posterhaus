@@ -151,9 +151,13 @@ app.get('/admin.html', (req, res, next) => {
   next();
 });
 
-app.use(express.static('public'));
-app.use('/posters', express.static('posters'));
-app.use('/P_wanted', express.static('P_wanted'));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/posters', express.static(path.join(__dirname, 'posters')));
+app.use('/P_wanted', express.static(path.join(__dirname, 'P_wanted')));
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // ─── Load Posters (Integration of MongoDB + MySQL + Folder Categories) ────────
 async function loadPosters() {
